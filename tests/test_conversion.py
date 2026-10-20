@@ -42,7 +42,7 @@ assert len(info["connections"]["copy-hotkey"]) == 1
 assert info["connections"]["copy-hotkey"][0]["destinationuid"] == "convert"
 assert set(info["uidata"]) == set(objects)
 assert info["bundleid"] == "local.jacob.craft-to-anki"
-assert info["version"] == "0.2.9"
+assert info["version"] == "0.2.10"
 assert info["readme"] == (workflow / "README.txt").read_text()
 assert "--copy" not in source
 assert "NSPasteboardTypeHTML" not in source
@@ -71,6 +71,12 @@ with tempfile.TemporaryDirectory() as temp:
         )
         assert helper_info["LSUIElement"] is True
         assert helper_info["CFBundleVersion"] == info["version"]
+        assert helper_info["CFBundleIconFile"] == "icon.png"
+        assert f"{helper}Contents/Resources/icon.png" in packaged
+        assert (
+            archive.read(f"{helper}Contents/Resources/icon.png")
+            == (workflow / "icon.png").read_bytes()
+        )
         # A native host must replace the script applet entirely: Control can force
         # an applet startup screen even with OSAAppletShowStartupScreen disabled.
         assert helper_info["CFBundleExecutable"] == "notifier"

@@ -1,4 +1,5 @@
 import plistlib
+import shutil
 import subprocess
 import tempfile
 import zipfile
@@ -14,6 +15,9 @@ with tempfile.TemporaryDirectory() as temporary:
     helper = Path(temporary) / "Craft HTML Notifications.app"
     executable = helper / "Contents" / "MacOS" / "notifier"
     executable.parent.mkdir(parents=True)
+    icon = helper / "Contents" / "Resources" / "icon.png"
+    icon.parent.mkdir(parents=True)
+    shutil.copyfile(workflow / "icon.png", icon)
     subprocess.run(
         [
             "/usr/bin/xcrun",
@@ -39,6 +43,7 @@ with tempfile.TemporaryDirectory() as temporary:
         CFBundleName="Craft HTML Notifications",
         CFBundleDisplayName="Craft HTML Notifications",
         CFBundleExecutable="notifier",
+        CFBundleIconFile="icon.png",
         CFBundlePackageType="APPL",
         CFBundleShortVersionString=version,
         CFBundleVersion=version,

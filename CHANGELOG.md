@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.10] - 2026-10-20
+
+### Changed
+
+- Package the workflow icon in the background notification app so status banners use the workflow artwork.
+
 ## [v0.2.9] - 2026-10-20
 
 ### Changed
