@@ -29,21 +29,21 @@
     "prettier-plugin-multiline-arrays": "^4.1.11"
   },
   "scripts": {
+    "build:workflow": "uv run --locked python scripts/build.py",
     "check": "npx prettier . --check",
+    "check:py": "uv run --locked ruff format --check .",
     "format": "npx prettier . --write",
+    "format:py": "uv run --locked ruff format .",
     "hook:install": "npx lefthook install",
     "lint:docs": "npx markdownlint-cli2 \"**/*.md\"",
     "lint:docs:fix": "npx markdownlint-cli2 \"**/*.md\" --fix",
-    "lint:scripts": "eslint . --max-warnings 0",
-    "lint:scripts:fix": "npx eslint --fix",
-    "test": "node --test",
-    "py:setup": "uv sync --locked",
     "lint:py": "uv run --locked ruff check .",
     "lint:py:fix": "uv run --locked ruff check --fix .",
-    "format:py": "uv run --locked ruff format .",
-    "format:py:check": "uv run --locked ruff format --check .",
-    "test:py": "uv run --locked python tests/test_conversion.py",
-    "build:workflow": "uv run --locked python scripts/build.py"
+    "lint:scripts": "eslint . --max-warnings 0",
+    "lint:scripts:fix": "npx eslint --fix",
+    "py:setup": "uv sync --locked",
+    "test": "node --test",
+    "test:py": "uv run --locked python tests/test_conversion.py"
   },
   "allowScripts": {
     "lefthook@2.1.10": true,
