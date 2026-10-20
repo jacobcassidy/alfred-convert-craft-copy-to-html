@@ -1,6 +1,6 @@
 # Python development setup
 
-This document describes the planned setup for the project's Python build script and conversion checks. Use uv to manage the environment and Ruff to lint and format Python files. Run commands from the repository root.
+The project's Python build script and conversion checks use uv to manage the environment and Ruff to lint and format Python files. The configuration, dependency lockfile, npm aliases, and Git hooks described below are included in the repository. Run commands from the repository root.
 
 ## 1. Install uv
 
@@ -18,9 +18,9 @@ uv --version
 
 Ensure `uv` is also available on the PATH used by Git hooks, including when committing from an editor. See the [uv installation instructions](https://docs.astral.sh/uv/getting-started/installation/).
 
-## 2. Add pyproject.toml
+## 2. Project configuration
 
-Create `pyproject.toml` in the repository root with this content:
+The repository's `pyproject.toml` contains:
 
 ```toml
 [project]
@@ -49,34 +49,33 @@ indent-style = "space"
 line-ending = "auto"
 ```
 
-The proposed development baseline is Python 3.11 or later. `package = false` configures this as a collection of scripts and development dependencies. The existing Python scripts use standard-library modules, so `dependencies` is empty. Ruff belongs in the `dev` group, which uv installs by default. See [uv project configuration](https://docs.astral.sh/uv/concepts/projects/config/) and [development dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies).
+The development baseline is Python 3.11 or later. `package = false` configures this as a collection of scripts and development dependencies. The existing Python scripts use standard-library modules, so `dependencies` is empty. Ruff belongs in the `dev` group, which uv installs by default. See [uv project configuration](https://docs.astral.sh/uv/concepts/projects/config/) and [development dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies).
 
 The Ruff settings retain the existing 88-character formatting style, double quotes, and space indentation. The selected lint rules check common syntax and import errors, unused names, and import ordering. See [Ruff configuration](https://docs.astral.sh/ruff/configuration/) and [Ruff rules](https://docs.astral.sh/ruff/rules/).
 
-Commands will use npm script aliases that invoke `uv run`. npm provides the shortcuts, while uv manages Python and Ruff. Both `npm` and `uv` must be available on PATH.
+Commands use npm script aliases that invoke `uv run`. npm provides the shortcuts, while uv manages Python and Ruff. Both `npm` and `uv` must be available on PATH.
 
-## 3. Install Ruff and lock the environment
+## 3. Install the locked environment
 
-After creating `pyproject.toml`, resolve the dependencies and install them:
+Install the dependencies recorded in the committed `uv.lock` and verify Ruff:
 
 ```sh
-uv lock
 uv sync --locked
 uv run --locked ruff --version
 ```
 
-uv creates a local `.venv/` and installs Ruff there. `uv.lock` records the resolved versions. Commit `pyproject.toml` and `uv.lock` so other contributors can reproduce the setup with `uv sync --locked`. See [uv locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/).
+uv creates a local `.venv/` and installs Ruff there. `uv.lock` records the resolved versions so other contributors can reproduce the setup with `uv sync --locked`. After intentionally changing dependencies in `pyproject.toml`, run `uv lock` followed by `uv sync --locked`, verify the checks below, and commit both files. See [uv locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/).
 
-Add these entries to `.gitignore`:
+The local environment and Ruff cache are excluded by `.gitignore`:
 
 ```gitignore
 /.venv/
 /.ruff_cache/
 ```
 
-## 4. Add npm script aliases
+## 4. Development commands
 
-Merge these entries into the existing `scripts` object in `package.json`:
+`package.json` includes these Python aliases alongside the existing scripts:
 
 ```json
 {
@@ -92,7 +91,7 @@ Merge these entries into the existing `scripts` object in `package.json`:
 }
 ```
 
-Keep the existing npm scripts, including `check`, `format`, and `test`. The Python aliases use the project's uv environment; Ruff remains a Python development dependency. See [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).
+The existing npm scripts, including `check`, `format`, and `test`, remain available. The Python aliases use the project's uv environment; Ruff remains a Python development dependency. See [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).
 
 | Task                               | Command                       |
 | ---------------------------------- | ----------------------------- |
@@ -108,9 +107,9 @@ Keep the existing npm scripts, including `check`, `format`, and `test`. The Pyth
 
 The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `workflow/info.plist`.
 
-## 5. Add Ruff to lefthook.yml
+## 5. Git hooks
 
-Keep the existing commands and append the two Ruff entries. The complete proposed `pre-commit` configuration is:
+`lefthook.yml` runs the existing commands followed by the two Ruff entries:
 
 ```yaml
 pre-commit:
@@ -176,4 +175,4 @@ npm run check
 npm run lint:docs
 ```
 
-Review any Python edits and commit them with `pyproject.toml`, `uv.lock`, `.gitignore`, `package.json`, and `lefthook.yml`. Keep both `package-lock.json` and `uv.lock` under version control; each records its ecosystem's dependency versions. Update the README's development commands to match the table above when implementing the setup.
+Review any Python edits before committing. Keep both `package-lock.json` and `uv.lock` under version control; each records its ecosystem's dependency versions. The README lists the same development commands for quick reference.

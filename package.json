@@ -36,7 +36,14 @@
     "lint:docs:fix": "npx markdownlint-cli2 \"**/*.md\" --fix",
     "lint:scripts": "eslint . --max-warnings 0",
     "lint:scripts:fix": "npx eslint --fix",
-    "test": "node --test"
+    "test": "node --test",
+    "python:setup": "uv sync --locked",
+    "lint:python": "uv run --locked ruff check .",
+    "lint:python:fix": "uv run --locked ruff check --fix .",
+    "format:python": "uv run --locked ruff format .",
+    "format:python:check": "uv run --locked ruff format --check .",
+    "test:python": "uv run --locked python tests/test_conversion.py",
+    "build:workflow": "uv run --locked python scripts/build.py"
   },
   "allowScripts": {
     "lefthook@2.1.10": true,

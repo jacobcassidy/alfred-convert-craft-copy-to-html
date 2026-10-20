@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a uv-managed Python development environment with committed `pyproject.toml` and `uv.lock`, Ruff lint and format configuration, npm commands for Python setup, checks, and workflow builds, and staged Python fixes through Lefthook.
 - Added `docs/python-setup.md` with the planned uv and Ruff installation, configuration, npm script aliases for checking the project root, development commands, and Lefthook integration.
 
 ### Changed
 
+- Updated the README and Python setup guide to document the implemented development environment and commands.
 - Updated JavaScript declarations, JSDoc documentation, and spacing to follow `AGENTS.md` code rules.
 - Configured ESLint for the macOS JavaScript for Automation workflow runtime.
 - Organized Alfred sources under `workflow/`, conversion checks and RTF fixtures under `tests/`, and the build script under `scripts/`.

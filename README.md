@@ -4,13 +4,35 @@ An Alfred workflow that converts rich text copied from Craft into HTML for pasti
 
 ## Build
 
-Run `python3 scripts/build.py` to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `workflow/info.plist` and packages the files in `workflow/` at the archive root for Alfred.
+Run `npm run build:workflow` after the development setup below to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `workflow/info.plist` and packages the files in `workflow/` at the archive root for Alfred.
 
-## Checks
+## Development
 
-Run `python3 tests/test_conversion.py` to check conversion output and workflow wiring without changing the clipboard. The RTF fixtures are in `tests/fixtures/`.
+Install Node.js/npm and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run these commands from the repository root:
 
-See the [Python setup plan](docs/python-setup.md) for installing uv and Ruff, sharing dependencies, and adding Python checks to Lefthook.
+```sh
+npm ci
+npm run python:setup
+npm run hook:install
+```
+
+uv manages Python 3.11 or later and installs Ruff in `.venv/` using the committed `uv.lock`. Keep both `npm` and `uv` available on PATH, including for Git hooks run from an editor. Manual virtual-environment activation is unnecessary.
+
+| Task                               | Command                       |
+| ---------------------------------- | ----------------------------- |
+| Install the shared environment     | `npm run python:setup`        |
+| Check Python lint rules            | `npm run lint:python`         |
+| Apply available lint fixes         | `npm run lint:python:fix`     |
+| Format Python files                | `npm run format:python`       |
+| Check Python formatting            | `npm run format:python:check` |
+| Run conversion and workflow checks | `npm run test:python`         |
+| Build the Alfred workflow bundle   | `npm run build:workflow`      |
+
+The conversion checks require macOS (`/usr/bin/osascript` and AppKit) and run without changing the clipboard. The RTF fixtures are in `tests/fixtures/`.
+
+The pre-commit hook runs Ruff lint fixes followed by formatting on staged Python files and stages the fixes. Existing JavaScript, Markdown, and Prettier hooks remain enabled. Use `npm run check` and `npm run lint:docs` for project formatting and documentation checks.
+
+See [Python development setup](docs/python-setup.md) for installation, dependency updates, configuration, and verification commands.
 
 ## Project layout
 

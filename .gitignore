@@ -1,5 +1,7 @@
 # Ignore development directories
 /node_modules
+/.venv/
+/.ruff_cache/
 
 # Ignore development files
 *.log
