@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.19] - 2026-10-20
+
+### Changed
+
+- Convert standalone Craft monospace lines to `<pre>` blocks while keeping inline monospace text in `<code>` elements.
+
 ## [v0.2.18] - 2026-10-20
 
 ### Fixed

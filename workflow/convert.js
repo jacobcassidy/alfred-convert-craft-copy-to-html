@@ -203,6 +203,9 @@ function serialize(model) {
       toggle: isToggle,
       toggleIndent,
       titleStart,
+      codeBlock:
+        line.length > 0 &&
+        Array.from({ length: line.length }, (_, index) => model.styles[offset + index].code).every(Boolean),
       fontSize: model.styles[headingOffset]?.fontSize || 0,
       bold: !!model.styles[headingOffset]?.bold,
       heading:
@@ -267,11 +270,65 @@ function serialize(model) {
     return items.join("\n");
   }
 
+  /**
+   * Add block indentation outside preformatted code without changing its contents.
+   * @param {string} html Serialized block HTML.
+   * @param {string} indentation Indentation added to each outer source line.
+   * @returns {string} Indented HTML with preformatted text intact.
+   */
+  function indentOutsidePre(html, indentation) {
+    let result = "";
+    let cursor = 0;
+    let inPre = false;
+    let lineStart = true;
+
+    while (cursor < html.length) {
+      if (lineStart && !inPre) {
+        result += indentation;
+        lineStart = false;
+      }
+
+      if (html.slice(cursor, cursor + 5) === "<pre>") {
+        result += "<pre>";
+        cursor += 5;
+        inPre = true;
+
+        continue;
+      }
+
+      if (html.slice(cursor, cursor + 6) === "</pre>") {
+        result += "</pre>";
+        cursor += 6;
+        inPre = false;
+
+        continue;
+      }
+
+      const character = html[cursor++];
+
+      result += character;
+
+      if (character === "\n") lineStart = true;
+    }
+
+    return result;
+  }
+
   const blocks = [];
-  const hasBlocks = lines.some((line) => line.bullet || line.heading);
+  const hasBlocks = lines.some((line) => line.bullet || line.heading || line.codeBlock);
 
   while (cursor < lines.length) {
-    if (lines[cursor].bullet) {
+    if (lines[cursor].codeBlock) {
+      const code = [];
+
+      while (cursor < lines.length && lines[cursor].codeBlock) {
+        const line = lines[cursor++];
+
+        code.push(model.text.slice(line.start, line.end));
+      }
+
+      blocks.push("<pre>" + escapeHTML(code.join("\n")) + "</pre>");
+    } else if (lines[cursor].bullet) {
       const list = renderList(lines[cursor].indent, 0);
 
       if (list) blocks.push(list);
@@ -305,7 +362,7 @@ function serialize(model) {
   }
 
   return hasBlocks
-    ? "<div>\n" + blocks.join("\n").replace(/^/gm, "  ") + "\n</div>"
+    ? "<div>\n" + indentOutsidePre(blocks.join("\n"), "  ") + "\n</div>"
     : "<div>" + blocks.join("") + "</div>";
 }
 

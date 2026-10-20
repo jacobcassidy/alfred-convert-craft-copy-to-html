@@ -54,7 +54,7 @@ Keep the currently implemented semantic formatting as the baseline for the new s
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Ordinary text                   | Escape HTML-sensitive characters and place the result in an outer `<div>`.                                                                                                                                      |
 | Bold, italic, underline, strike | Use `<b>`, `<i>`, `<u>`, and `<s>`; support combinations with deterministic nesting.                                                                                                                            |
-| Monospace text                  | Wrap text in `<code>…</code>` with no attributes. Retain the existing monospace trait/font-name detection baseline.                                                                                             |
+| Monospace text                  | Wrap inline runs in `<code>…</code>`; render standalone monospace lines in `<pre>…</pre>`. Retain the existing monospace trait/font-name detection baseline.                                                    |
 | Web and mail links              | Use escaped `<a href="…">` destinations for `http:`, `https:`, and `mailto:` only. Unsupported destinations retain visible text.                                                                                |
 | Line breaks                     | Normalize CRLF and CR to LF internally, retaining style offsets, and serialize each `<br>` followed by content on its own indented source line.                                                                 |
 | Bullet prefixes and indentation | Recognize the existing bullet markers and whitespace rules, remove their prefixes, and emit nested `<ul>`/`<li>` structures. Keep a monospace dash-prefixed line as code.                                       |
@@ -114,7 +114,7 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 ### 2. Build the converter and single clipboard writer
 
 - Implement attributed-text parsing and the HTML serializer from the conversion scope.
-- Emit only bare `<code>` and `</code>` tags for code runs, including code combined with other formatting. Do not add style, class, or any other attributes to the code tag.
+- Emit only bare `<code>` and `</code>` tags for inline code runs, including code combined with other formatting. Render standalone monospace lines inside `<pre>` elements and preserve their whitespace.
 - Return a string instead of the existing `{ html, plain }` result object.
 - Implement input validation, the clipboard revision check, and a writer that declares only `NSPasteboardTypeString` with the generated HTML value.
 - Remove all output writes of `NSPasteboardTypeHTML` and `NSPasteboardTypeRTF`, and the write of the original plain text.

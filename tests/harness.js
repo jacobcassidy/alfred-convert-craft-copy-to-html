@@ -155,17 +155,31 @@ function checkConversion(root) {
   assert(linkHTML.includes('href="mailto:a@example.com"'), "mail destination");
   assert(!linkHTML.includes("javascript:") && linkHTML.includes("bad"), "unsafe destinations retain text only");
 
-  const code = attributedText("  x\t y  ");
+  const codeText = "before  x\t y  after";
+  const code = attributedText(codeText);
 
   code.addAttributeValueRange(
     $.NSFontAttributeName,
     $.NSFont.fontWithNameSize("Menlo-BoldItalic", 12),
-    $.NSMakeRange(0, code.length),
+    $.NSMakeRange(codeText.indexOf("  x"), codeText.indexOf("after") - codeText.indexOf("  x")),
   );
   equal(
     convert(rtfData(code)),
-    "<div><i><b><code>  x\t y  </code></b></i></div>",
-    "bare combined code retains whitespace",
+    "<div>before<i><b><code>  x\t y  </code></b></i>after</div>",
+    "inline code retains its whitespace and combined styles",
+  );
+
+  const codeBlock = attributedText('print("hello")\n  print("world")');
+
+  codeBlock.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Menlo-Regular", 12),
+    $.NSMakeRange(0, codeBlock.length),
+  );
+  equal(
+    serialize(parseAttributed(codeBlock)),
+    "<div>\n  <pre>print(&quot;hello&quot;)\n  print(&quot;world&quot;)</pre>\n</div>",
+    "standalone monospace lines become a pre block with source whitespace intact",
   );
 
   const paddedHeading = attributedText("\tMy modifications for the Wrapper Meta-addon ");

@@ -13,7 +13,7 @@ The result is one HTML string, explicitly published as the only representation o
 | Ordinary text                   | Escaped text inside an outer `<div>`                                                           |
 | Bold, italic, underline, strike | `<b>`, `<i>`, `<u>`, `<s>`, with deterministic combination order                               |
 | Heading-sized text              | Bold text at heading sizes maps to `<h1>` through `<h4>`, selected by copied font size         |
-| Monospace fonts                 | Bare `<code>` tags, including when combined with other styles                                  |
+| Monospace fonts                 | Inline `<code>` or standalone `<pre>` blocks, including escaped text and preserved whitespace  |
 | HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only                            |
 | CRLF, CR, and LF line endings   | Normalized `<br>` elements on separate indented source lines                                   |
 | Bullet markers and indentation  | Nested `<ul>`/`<li>`; monospace marker-prefixed lines remain code                              |

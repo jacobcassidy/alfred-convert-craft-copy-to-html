@@ -11,7 +11,7 @@
 	<key>name</key>
 	<string>Convert Craft Copy to HTML</string>
 	<key>version</key>
-	<string>0.2.18</string>
+	<string>0.2.19</string>
 	<key>description</key>
 	<string>Copy the active Craft selection as plain-text HTML source</string>
 	<key>objects</key>
@@ -124,7 +124,7 @@ The clipboard contains one item explicitly publishing only public.utf8-plain-tex
 The result is intended for pasting as source. Applications no longer receive a rich-HTML representation, original unformatted text, or retained RTF.
 
 FORMATTING
-Preserves bold, italic, underline, strike, safe http/https/mailto links, line breaks, Unicode, and nested bullet lists. Monospace text uses bare &lt;code&gt; tags with no attributes. Dash prefixes inside monospace text remain code. HTML-sensitive text and link attributes are escaped.
+Preserves bold, italic, underline, strike, safe http/https/mailto links, line breaks, Unicode, and nested bullet lists. Inline monospace text uses bare &lt;code&gt; tags; standalone monospace lines use &lt;pre&gt; blocks. Dash prefixes inside monospace text remain code. HTML-sensitive text and link attributes are escaped.
 Nested block elements use new lines and two spaces of source indentation per level. Each `&lt;br&gt;` is followed by the next content or break on its own indented source line. Inline tags stay with their text. Leading and trailing whitespace inside non-code elements is removed; whitespace inside code elements is retained. Rendering whitespace is controlled by the receiving application.
 Craft toggle lines keep their `+` marker and remove whitespace copied before it. A toggle with heading-sized text becomes a heading and drops the `+` marker, even when its title is regular or italic rather than bold. Toggle titles do not shift relative heading levels inferred for other lines. Four nested heading toggle depths map directly to h1 through h4, including when font sizes repeat.
 Heading-sized text is mapped to `&lt;h1&gt;` through `&lt;h4&gt;` from its copied font size (24, 20, 17, and 15 pt thresholds). Four or more distinct bold heading sizes in one selection map by relative size order. Empty separator paragraphs do not create empty headings. Numbered lists, task states, images, attachments, tables, colors, and exact Craft layout are outside the conversion scope.
