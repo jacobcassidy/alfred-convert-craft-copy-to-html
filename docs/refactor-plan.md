@@ -19,11 +19,20 @@ The conversion function returns one HTML string. Original text may exist tempora
 ## One user flow
 
 1. Select content in the native Craft app.
-2. Press Control-Command-C and release the shortcut keys.
-3. The workflow sends Command-C to Craft, waits for a fresh copy, reads its RTF, converts it, and replaces the clipboard with the HTML source as plain text.
-4. A notification says “HTML source copied to clipboard.” Paste with Command-V wherever the source is needed.
+2. Press Control-Command-C. As soon as the workflow validates that Craft is active, a notification says “Conversion started.”
+3. Release the shortcut keys. The workflow sends Command-C to Craft, waits for a fresh copy, reads its RTF, converts it, and replaces the clipboard with the HTML source as plain text.
+4. After the clipboard write succeeds, replace the started notification with “HTML copy is ready to paste.” Paste with Command-V wherever the source is needed.
 
-Use one Alfred hotkey trigger, one script action, and one notification. Control-Command-C (Ctrl+Cmd+C, ⌃⌘C) is the default shortcut; it can be reassigned in Alfred if it conflicts or is cleared on import. Do not include any Alfred keyword objects, keyword aliases, or a separate convert-existing-clipboard action. The script's sole production path copies from Craft and converts the fresh result, without a `--copy` mode switch. It does not paste automatically.
+Use one Alfred hotkey trigger, one script action, and one notification lifecycle managed by that action. Control-Command-C (Ctrl+Cmd+C, ⌃⌘C) is the default shortcut; it can be reassigned in Alfred if it conflicts or is cleared on import. Do not include any Alfred keyword objects, keyword aliases, or a separate convert-existing-clipboard action. The script's sole production path copies from Craft and converts the fresh result, without a `--copy` mode switch. It does not paste automatically.
+
+### Immediate progress and replacement notification
+
+- Show “Conversion started.” immediately after the initial Craft identity check, before waiting for modifier release, sending Copy, or starting conversion. Do not wait for the script to finish before showing progress.
+- Use the same notification identity for the started and ready states so the ready message replaces the earlier notification rather than adding a second notification. Keep the title “Convert Craft Copy to HTML.”
+- Show “HTML copy is ready to paste.” only after the plain-text HTML has been successfully written to the clipboard.
+- If copying, focus validation, conversion, or writing fails after progress is shown, replace that same notification with the specific failure message. Never leave the started state as the final status or show ready after failure.
+- Notifications must not steal focus from Craft or require dismissal before copying or conversion continues. Keep the single action nonconcurrent so repeated shortcuts during an active run do not start competing notification lifecycles.
+- Select and verify a notification mechanism that supports replacement by identity. Matching titles or issuing two ordinary notification outputs is not sufficient evidence of replacement. Confirm the visible replacement behavior on macOS before considering this requirement complete, and account for notification permissions in installation guidance.
 
 ### Craft must be the active app
 
@@ -61,14 +70,16 @@ Use the built-in macOS JXA and AppKit runtime, with no new runtime dependencies.
 
 Keep responsibilities small and explicit:
 
-1. **Copy selection:** verify the frontmost app's Craft bundle identifier and record its process identifier, wait for shortcut modifiers to be released, recheck focus, send Command-C, and require a fresh clipboard revision within the timeout.
+1. **Start and copy selection:** verify the frontmost app's Craft bundle identifier and record its process identifier, immediately show the started notification, wait for shortcut modifiers to be released, recheck focus, send Command-C, and require a fresh clipboard revision within the timeout.
 2. **Read input:** capture the fresh pasteboard revision and RTF data without further clipboard changes.
 3. **Parse input:** decode RTF into an attributed string and extract text, styles, and line/list structure. Reject unreadable or empty input before writing converted output.
 4. **Serialize:** convert the parsed content into one escaped HTML string. The serializer does not access the clipboard or Alfred.
 5. **Write output:** prepare one item containing the HTML string under `NSPasteboardTypeString`, confirm that the original Craft process remains frontmost, check the captured revision, clear the clipboard, and write that item.
-6. **Report status:** send a short success or failure message to Alfred's notification. Status messages never become clipboard contents.
+6. **Update status:** replace the started notification with “HTML copy is ready to paste.” after a successful write, or with the specific failure message when a run fails. Status messages never become clipboard contents.
 
 The writer should accept a pasteboard object so tests can use an isolated named pasteboard. Production passes `NSPasteboard.generalPasteboard`. Isolate copy automation behind testable operations for focus, modifier state, time, and sending Copy so automated tests need not send real keystrokes. Keep fixture execution in a separate test harness rather than retaining a file-path mode in the production entry point.
+
+Provide one notification adapter with explicit show/update operations and a shared notification identity for each run. Invoke it from the action at the actual start and completion points, and inject a recording implementation for automated checks. Verify the chosen backend's replacement behavior before finalizing its implementation; preserve the goal of no third-party runtime dependencies.
 
 Follow `AGENTS.md` for JavaScript documentation, declaration keywords, spacing, and commits. Reuse the repository's linting, formatting, Python environment, and packaging tools.
 
@@ -108,9 +119,9 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 
 ### 3. Replace Alfred wiring
 
-- Rebuild `workflow/info.plist` with one Control-Command-C hotkey trigger, one nonconcurrent copy-and-convert action, and one notification.
+- Rebuild `workflow/info.plist` with one Control-Command-C hotkey trigger and one nonconcurrent copy-and-convert action that manages the notification lifecycle.
 - Restrict the hotkey to Craft using Alfred's Related Apps configuration and the verified bundle identifier. Preserve this app restriction in the packaged plist and when the shortcut is reassigned.
-- Wire `copy-hotkey → convert → notify`, using `/usr/bin/osascript -l JavaScript "./convert.js"` without runtime arguments. The action always performs the guarded copy before conversion.
+- Wire `copy-hotkey → convert`, using `/usr/bin/osascript -l JavaScript "./convert.js"` without runtime arguments. The action shows progress immediately after Craft validation, performs the guarded copy and conversion, then updates that notification after success or failure. Remove the old end-only `notify` output and its connection; do not rely on script completion to show the started state.
 - Remove every keyword object and its connections and canvas entries, including the existing `craftanki` keyword. Do not introduce `crafthtml` or any other keyword. Consolidate the old two script actions into the single action.
 - Update the description, shortcut labels, notification text, and embedded readme to say the shortcut copies the Craft selection as plain-text HTML source.
 - Keep the existing bundle identifier so importing the rebuilt package updates the installed workflow. The internal identifier is retained for upgrade identity; user-facing text should describe the new purpose.
@@ -120,24 +131,26 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 
 Use the existing Python test entry point and a JXA test harness. Replace obsolete expectations about `{ html, plain }`, dual invocation paths, `--copy`, and exact legacy wrapper layout. Keep checks for the default hotkey binding.
 
-| Check                  | Required evidence                                                                                                                                                                                                                                   |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| HTML conversion        | Fixtures cover escaping, style combinations, underline, strike, code whitespace, allowed/disallowed links, nested bullets, ordinary text around lists, Unicode, and all supported line endings.                                                     |
-| Output value           | The only published string equals the generated HTML, including tags; it is not the original plain text.                                                                                                                                             |
-| Output representations | Seed an isolated pasteboard with rich-text input and additional types, run the writer, and inspect the resulting item. Assert one item and exactly the explicitly declared plain-text type, with no HTML or RTF representation retained.            |
-| Failure preservation   | Missing/invalid/empty RTF and conversion failures do not change the seeded clipboard. A revision change before writing preserves the newer contents.                                                                                                |
-| Write failure          | A controlled failed-write case returns an error rather than a success notification.                                                                                                                                                                 |
-| Copy safeguards        | Simulated focus, modifier, permission, and timeout failures stop conversion. A stale clipboard is never used, and conversion starts only after a fresh copy and focus validation.                                                                   |
-| Craft-only execution   | Reject a non-Craft bundle identifier even if its display name is Craft. Direct invocation outside Craft sends no keystrokes and changes no clipboard contents. A focus change before Copy, after Copy, or before writing prevents the output write. |
-| Repeated invocation    | Each invocation requests a fresh Craft copy. A failed subsequent copy does not convert the previous HTML result.                                                                                                                                    |
-| Workflow graph         | Exactly one hotkey trigger has the default binding and a Craft-only app restriction; one action leads to one notification; every connection is valid. No keyword objects or alternate invocation paths exist.                                       |
-| Package contents       | The built archive contains the replacement runtime and current metadata/readme at its root, without legacy runtime files or an alternate workflow.                                                                                                  |
+| Check                  | Required evidence                                                                                                                                                                                                                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HTML conversion        | Fixtures cover escaping, style combinations, underline, strike, code whitespace, allowed/disallowed links, nested bullets, ordinary text around lists, Unicode, and all supported line endings.                                                                                     |
+| Output value           | The only published string equals the generated HTML, including tags; it is not the original plain text.                                                                                                                                                                             |
+| Output representations | Seed an isolated pasteboard with rich-text input and additional types, run the writer, and inspect the resulting item. Assert one item and exactly the explicitly declared plain-text type, with no HTML or RTF representation retained.                                            |
+| Failure preservation   | Missing/invalid/empty RTF and conversion failures do not change the seeded clipboard. A revision change before writing preserves the newer contents.                                                                                                                                |
+| Write failure          | A controlled failed-write case returns an error rather than a success notification.                                                                                                                                                                                                 |
+| Copy safeguards        | Simulated focus, modifier, permission, and timeout failures stop conversion. A stale clipboard is never used, and conversion starts only after a fresh copy and focus validation.                                                                                                   |
+| Craft-only execution   | Reject a non-Craft bundle identifier even if its display name is Craft. Direct invocation outside Craft sends no keystrokes and changes no clipboard contents. A focus change before Copy, after Copy, or before writing prevents the output write.                                 |
+| Repeated invocation    | Each invocation requests a fresh Craft copy. A failed subsequent copy does not convert the previous HTML result.                                                                                                                                                                    |
+| Notification lifecycle | Recorded calls show started after Craft validation and before modifier waiting or Copy, then ready only after a successful clipboard write. Started and terminal updates share one identity. Every failure after start updates that identity with an error and never reports ready. |
+| Workflow graph         | Exactly one hotkey trigger has the default binding and a Craft-only app restriction; one nonconcurrent action manages notification updates; every connection is valid. No keyword objects, end-only notification output, or alternate invocation paths exist.                       |
+| Package contents       | The built archive contains the replacement runtime and current metadata/readme at its root, without legacy runtime files or an alternate workflow.                                                                                                                                  |
 
-Automated checks must use fixture files, isolated pasteboards, and simulated copy operations so they do not overwrite the developer's general clipboard or send real keystrokes. Account for any system-synthesized pasteboard aliases separately from the one type explicitly published by the workflow.
+Automated checks must use fixture files, isolated pasteboards, simulated copy operations, and a recording notification adapter so they do not overwrite the developer's general clipboard, send real keystrokes, or show real notifications. Account for any system-synthesized pasteboard aliases separately from the one type explicitly published by the workflow.
 
 ### 5. Update documentation and package
 
 - Rewrite `README.md`, `workflow/README.txt`, and the embedded plist readme around selecting text in Craft, pressing Control-Command-C, and pasting literal HTML source. Document that Craft must be active, shortcut reassignment must retain the Craft restriction, and copy automation requires the relevant permissions.
+- Document the immediate started notification, replacement with ready or failure, and notification permissions needed to see these updates.
 - Replace `docs/FEATURES.md` with the implemented single-output behavior and accurate formatting limits. Link to the historical inventory instead of presenting old features as current.
 - Remove Anki formatted-paste instructions and all keyword usage instructions from current documentation.
 - Record the shortcut-only flow, removed keyword path, single plain-text clipboard representation, and lost formatted-paste behavior in `CHANGELOG.md`.
@@ -159,6 +172,8 @@ npm run build:workflow
 ```
 
 Import the rebuilt workflow into Alfred, select text in Craft, and press Control-Command-C to verify copying and conversion in one shortcut. Paste into a plain-text editor and confirm that literal HTML tags appear. Inspect the pasteboard to confirm that the workflow publishes only the HTML source as plain text. Verify shortcut reassignment, permission-error reporting, modifier-release handling, focus changes, and copy timeouts manually. Confirm that exactly one shortcut path and no Alfred keywords remain after updating an existing installation.
+
+Confirm that “Conversion started.” appears immediately while Craft remains active, including while shortcut modifiers are still held. Verify that successful completion replaces that notification with “HTML copy is ready to paste.” and leaves a single notification entry instead of stacking started and ready messages. Exercise a failure after start and verify that it replaces the same notification with the error. Check that notifications do not steal focus and that repeated shortcuts during an active run do not create competing runs or duplicate notifications.
 
 With Craft running in the background, make another app active and press the shortcut. Confirm that the workflow does not launch, send Copy, show its notification, or alter the clipboard. Repeat after shortcut reassignment and after importing an update. Switch away from Craft during a run and confirm that the runtime guard prevents writing HTML output.
 
