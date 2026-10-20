@@ -12,6 +12,7 @@ The result is one HTML string, explicitly published as the only representation o
 | ------------------------------- | ---------------------------------------------------------------------------------------------- |
 | Ordinary text                   | Escaped text inside an outer `<div>`                                                           |
 | Bold, italic, underline, strike | `<strong>`, `<em>`, `<u>`, `<s>`, with deterministic combination order                         |
+| Heading-sized text              | `<h1>` through `<h4>`, selected by copied font size                                            |
 | Monospace fonts                 | Bare `<code>` tags, including when combined with other styles                                  |
 | HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only                            |
 | CRLF, CR, and LF line endings   | Normalized `<br>` elements on separate indented source lines                                   |
@@ -25,6 +26,6 @@ Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by s
 
 Each run copies afresh. Held modifiers, copy permission errors, copy timeouts, changed focus, missing/invalid/empty RTF, conversion failures, and clipboard revision changes produce specific errors. Input and preparation failures do not clear the fresh clipboard. A newer clipboard revision is preserved. A write failure after the final clear can leave the clipboard empty; the action reports failure and never publishes fallback types or a ready notification.
 
-Headings, numbered lists, task states, images, attachments, tables, font colors, font sizes, syntax highlighting, and exact Craft layout are outside this release. Inputs come only from the fresh Craft RTF copy. The workflow uses built-in macOS JXA and AppKit and requires Alfred Powerpack.
+Numbered lists, task states, images, attachments, tables, font colors, syntax highlighting, and exact Craft layout are outside this release. Heading levels are inferred from copied font sizes (24 pt and up for h1, 20 for h2, 17 for h3, and 15 for h4); this is a best-effort mapping because Craft does not expose semantic heading levels in the RTF input. Inputs come only from the fresh Craft RTF copy. The workflow uses built-in macOS JXA and AppKit and requires Alfred Powerpack.
 
 See the [installation and permission instructions](../README.md), [validation evidence](validation.md), and [historical feature inventory](reference/v0.1.0/previous-features.md). The previous implementation remains under [reference/v0.1.0/](reference/v0.1.0/).

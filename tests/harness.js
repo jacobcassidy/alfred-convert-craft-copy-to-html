@@ -205,8 +205,29 @@ function checkConversion(root) {
   );
   equal(
     serialize(parseAttributed(styledToggle)),
-    "<div><h1>Styled toggle</h1></div>",
+    "<div>\n  <h1>Styled toggle</h1>\n</div>",
     "a large heading style turns its Craft toggle into a heading",
+  );
+
+  const headings = attributedText("Title 1\nTitle 2\nTitle 3\nTitle 4\nBody");
+
+  for (const [offset, size] of [
+    [0, 24],
+    [8, 20],
+    [16, 17],
+    [24, 15],
+  ]) {
+    headings.addAttributeValueRange(
+      $.NSFontAttributeName,
+      $.NSFont.fontWithNameSize("Helvetica-Bold", size),
+      $.NSMakeRange(offset, 7),
+    );
+  }
+
+  equal(
+    serialize(parseAttributed(headings)),
+    "<div>\n  <h1>Title 1</h1>\n  <h2>Title 2</h2>\n  <h3>Title 3</h3>\n  <h4>Title 4</h4>\n  <div>Body</div>\n</div>",
+    "heading-sized Craft text uses semantic heading elements",
   );
 
   return 10;

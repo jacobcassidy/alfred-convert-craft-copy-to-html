@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.9] - 2026-10-20
+
+### Changed
+
+- Convert heading-sized Craft text to semantic `<h1>` through `<h4>` elements instead of a bold-only `<strong>` wrapper.
+
 ## [v0.2.8] - 2026-10-20
 
 ### Changed

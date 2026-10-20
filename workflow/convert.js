@@ -53,7 +53,7 @@ function styleAt(attributed, offset) {
     underline: enabled($.NSUnderlineStyleAttributeName),
     strike: enabled($.NSStrikethroughStyleAttributeName),
     code: !!(traits & 1024) || /mono|menlo|courier|consolas/i.test(name),
-    heading: size >= 28 ? 1 : size >= 22 ? 2 : size >= 18 ? 3 : size >= 15 ? 4 : 0,
+    heading: size >= 24 ? 1 : size >= 20 ? 2 : size >= 17 ? 3 : size >= 15 ? 4 : 0,
     link: link.isNil() ? "" : ObjC.unwrap(link.description),
   };
 }
@@ -172,6 +172,11 @@ function serialize(model) {
     const isToggle = !!toggle && !model.styles[offset + toggle[1].length].code;
     const start = isToggle ? offset + toggle[1].length : offset;
     const titleStart = isToggle ? offset + toggle[0].length : start;
+    let headingOffset = titleStart;
+
+    while (headingOffset < offset + line.length && /[ \t\u00a0]/.test(model.text[headingOffset])) {
+      headingOffset++;
+    }
 
     lines.push({
       start: marker ? offset + marker[0].length : start,
@@ -180,7 +185,7 @@ function serialize(model) {
       indent: marker ? marker[1].replace(/\t/g, "    ").length : 0,
       toggle: isToggle,
       titleStart,
-      heading: model.styles[titleStart]?.heading || 0,
+      heading: model.styles[headingOffset]?.heading || 0,
     });
     offset += line.length + 1;
   }
@@ -219,16 +224,7 @@ function serialize(model) {
   }
 
   const blocks = [];
-  const hasLists = lines.some(isBullet);
-
-  /**
-   * Identify list lines.
-   * @param {object} line Parsed line.
-   * @returns {boolean} Whether the line starts a list item.
-   */
-  function isBullet(line) {
-    return line.bullet;
-  }
+  const hasBlocks = lines.some((line) => line.bullet || line.heading);
 
   while (cursor < lines.length) {
     if (lines[cursor].bullet) {
@@ -236,7 +232,7 @@ function serialize(model) {
 
       if (list) blocks.push(list);
     } else {
-      if (lines[cursor].toggle && lines[cursor].heading) {
+      if (lines[cursor].heading) {
         const line = lines[cursor++];
 
         const title = renderRange(line.titleStart, line.end).replace(/<\/?strong>/g, "");
@@ -248,7 +244,7 @@ function serialize(model) {
 
       const text = [];
 
-      while (cursor < lines.length && !lines[cursor].bullet && !(lines[cursor].toggle && lines[cursor].heading)) {
+      while (cursor < lines.length && !lines[cursor].bullet && !lines[cursor].heading) {
         const line = lines[cursor++];
 
         text.push(renderRange(line.start, line.end));
@@ -258,11 +254,11 @@ function serialize(model) {
 
       const content = text.join("<br>\n" + "  ".repeat(1));
 
-      blocks.push(hasLists ? "<div>" + content + "</div>" : content);
+      blocks.push(hasBlocks ? "<div>" + content + "</div>" : content);
     }
   }
 
-  return hasLists
+  return hasBlocks
     ? "<div>\n" + blocks.join("\n").replace(/^/gm, "  ") + "\n</div>"
     : "<div>" + blocks.join("") + "</div>";
 }

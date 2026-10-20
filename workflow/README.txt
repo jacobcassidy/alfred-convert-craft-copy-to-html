@@ -18,7 +18,7 @@ FORMATTING
 Preserves bold, italic, underline, strike, safe http/https/mailto links, line breaks, Unicode, and nested bullet lists. Monospace text uses bare <code> tags with no attributes. Dash prefixes inside monospace text remain code. HTML-sensitive text and link attributes are escaped.
 Nested block elements use new lines and two spaces of source indentation per level. Each `<br>` is followed by the next content or break on its own indented source line. Inline tags stay with their text. Code whitespace is retained in the source; rendering whitespace is controlled by the receiving application.
 Craft toggle lines keep their `+` marker and remove whitespace copied before it. A toggle with heading-sized text becomes a heading and drops the `+` marker.
-Headings, numbered lists, task states, images, attachments, tables, colors, sizes, and exact Craft layout are outside the conversion scope.
+Heading-sized text is mapped to `<h1>` through `<h4>` from its copied font size (24, 20, 17, and 15 pt thresholds). Numbered lists, task states, images, attachments, tables, colors, and exact Craft layout are outside the conversion scope.
 
 FAILURES
 Every invocation makes a fresh Craft copy and requires RTF. Keep the original Craft process active until completion. Held modifiers time out after three seconds; copying times out after 2.5 seconds.
