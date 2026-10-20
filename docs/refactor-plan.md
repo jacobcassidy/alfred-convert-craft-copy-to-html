@@ -19,11 +19,11 @@ The conversion function returns one HTML string. Original text may exist tempora
 ## One user flow
 
 1. Select content in the native Craft app.
-2. Press Option-Command-C and release the shortcut keys.
+2. Press Control-Command-C and release the shortcut keys.
 3. The workflow sends Command-C to Craft, waits for a fresh copy, reads its RTF, converts it, and replaces the clipboard with the HTML source as plain text.
 4. A notification says “HTML source copied to clipboard.” Paste with Command-V wherever the source is needed.
 
-Use one Alfred hotkey trigger, one script action, and one notification. Option-Command-C is the default shortcut; it can be reassigned in Alfred if it conflicts or is cleared on import. Do not include any Alfred keyword objects, keyword aliases, or a separate convert-existing-clipboard action. The script's sole production path copies from Craft and converts the fresh result, without a `--copy` mode switch. It does not paste automatically.
+Use one Alfred hotkey trigger, one script action, and one notification. Control-Command-C (Ctrl+Cmd+C, ⌃⌘C) is the default shortcut; it can be reassigned in Alfred if it conflicts or is cleared on import. Do not include any Alfred keyword objects, keyword aliases, or a separate convert-existing-clipboard action. The script's sole production path copies from Craft and converts the fresh result, without a `--copy` mode switch. It does not paste automatically.
 
 ### Craft must be the active app
 
@@ -108,7 +108,7 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 
 ### 3. Replace Alfred wiring
 
-- Rebuild `workflow/info.plist` with one Option-Command-C hotkey trigger, one nonconcurrent copy-and-convert action, and one notification.
+- Rebuild `workflow/info.plist` with one Control-Command-C hotkey trigger, one nonconcurrent copy-and-convert action, and one notification.
 - Restrict the hotkey to Craft using Alfred's Related Apps configuration and the verified bundle identifier. Preserve this app restriction in the packaged plist and when the shortcut is reassigned.
 - Wire `copy-hotkey → convert → notify`, using `/usr/bin/osascript -l JavaScript "./convert.js"` without runtime arguments. The action always performs the guarded copy before conversion.
 - Remove every keyword object and its connections and canvas entries, including the existing `craftanki` keyword. Do not introduce `crafthtml` or any other keyword. Consolidate the old two script actions into the single action.
@@ -137,7 +137,7 @@ Automated checks must use fixture files, isolated pasteboards, and simulated cop
 
 ### 5. Update documentation and package
 
-- Rewrite `README.md`, `workflow/README.txt`, and the embedded plist readme around selecting text in Craft, pressing Option-Command-C, and pasting literal HTML source. Document that Craft must be active, shortcut reassignment must retain the Craft restriction, and copy automation requires the relevant permissions.
+- Rewrite `README.md`, `workflow/README.txt`, and the embedded plist readme around selecting text in Craft, pressing Control-Command-C, and pasting literal HTML source. Document that Craft must be active, shortcut reassignment must retain the Craft restriction, and copy automation requires the relevant permissions.
 - Replace `docs/FEATURES.md` with the implemented single-output behavior and accurate formatting limits. Link to the historical inventory instead of presenting old features as current.
 - Remove Anki formatted-paste instructions and all keyword usage instructions from current documentation.
 - Record the shortcut-only flow, removed keyword path, single plain-text clipboard representation, and lost formatted-paste behavior in `CHANGELOG.md`.
@@ -158,7 +158,7 @@ npm run test:py
 npm run build:workflow
 ```
 
-Import the rebuilt workflow into Alfred, select text in Craft, and press Option-Command-C to verify copying and conversion in one shortcut. Paste into a plain-text editor and confirm that literal HTML tags appear. Inspect the pasteboard to confirm that the workflow publishes only the HTML source as plain text. Verify shortcut reassignment, permission-error reporting, modifier-release handling, focus changes, and copy timeouts manually. Confirm that exactly one shortcut path and no Alfred keywords remain after updating an existing installation.
+Import the rebuilt workflow into Alfred, select text in Craft, and press Control-Command-C to verify copying and conversion in one shortcut. Paste into a plain-text editor and confirm that literal HTML tags appear. Inspect the pasteboard to confirm that the workflow publishes only the HTML source as plain text. Verify shortcut reassignment, permission-error reporting, modifier-release handling, focus changes, and copy timeouts manually. Confirm that exactly one shortcut path and no Alfred keywords remain after updating an existing installation.
 
 With Craft running in the background, make another app active and press the shortcut. Confirm that the workflow does not launch, send Copy, show its notification, or alter the clipboard. Repeat after shortcut reassignment and after importing an update. Switch away from Craft during a run and confirm that the runtime guard prevents writing HTML output.
 

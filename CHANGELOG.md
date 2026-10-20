@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the planned shortcut to Control-Command-C (Ctrl+Cmd+C) to avoid Craft's Option-Command-C Copy Format shortcut.
 - Restricted the planned shortcut to the active native Craft app, with bundle-identifier validation and runtime focus checks before copying and writing output.
 - Updated the refactor plan to use one shortcut that copies and converts the Craft selection, with no Alfred keywords.
 - Changed bold and italic HTML output to use `<strong>` and `<em>` instead of `<b>` and `<i>`.
