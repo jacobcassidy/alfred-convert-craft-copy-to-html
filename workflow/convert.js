@@ -53,6 +53,7 @@ function styleAt(attributed, offset) {
     underline: enabled($.NSUnderlineStyleAttributeName),
     strike: enabled($.NSStrikethroughStyleAttributeName),
     code: !!(traits & 1024) || /mono|menlo|courier|consolas/i.test(name),
+    fontSize: size,
     heading: size >= 24 ? 1 : size >= 20 ? 2 : size >= 17 ? 3 : size >= 15 ? 4 : 0,
     link: link.isNil() ? "" : ObjC.unwrap(link.description),
   };
@@ -172,6 +173,7 @@ function serialize(model) {
     const isToggle = !!toggle && !model.styles[offset + toggle[1].length].code;
     const start = isToggle ? offset + toggle[1].length : offset;
     const titleStart = isToggle ? offset + toggle[0].length : start;
+    const hasContent = !!model.text.slice(titleStart, offset + line.length).trim();
     let headingOffset = titleStart;
 
     while (headingOffset < offset + line.length && /[ \t\u00a0]/.test(model.text[headingOffset])) {
@@ -185,9 +187,21 @@ function serialize(model) {
       indent: marker ? marker[1].replace(/\t/g, "    ").length : 0,
       toggle: isToggle,
       titleStart,
-      heading: model.styles[headingOffset]?.heading || 0,
+      fontSize: model.styles[headingOffset]?.fontSize || 0,
+      bold: !!model.styles[headingOffset]?.bold,
+      heading: hasContent ? model.styles[headingOffset]?.heading || 0 : 0,
     });
     offset += line.length + 1;
+  }
+
+  const headingSizes = [
+    ...new Set(lines.filter((line) => line.heading && line.bold).map((line) => line.fontSize)),
+  ].sort((left, right) => right - left);
+
+  if (headingSizes.length >= 4) {
+    for (const line of lines) {
+      if (line.heading && line.bold) line.heading = Math.min(headingSizes.indexOf(line.fontSize) + 1, 4);
+    }
   }
 
   let cursor = 0;
@@ -243,14 +257,16 @@ function serialize(model) {
       }
 
       const text = [];
+      let hasText = false;
 
       while (cursor < lines.length && !lines[cursor].bullet && !lines[cursor].heading) {
         const line = lines[cursor++];
+        hasText ||= !!model.text.slice(line.start, line.end).trim();
 
         text.push(renderRange(line.start, line.end));
       }
 
-      if (text.length === 1 && !renderRange(lines[cursor - 1].start, lines[cursor - 1].end)) continue;
+      if (!hasText) continue;
 
       const content = text.join("<br>\n" + "  ".repeat(1));
 

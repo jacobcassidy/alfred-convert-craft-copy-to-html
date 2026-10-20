@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.12] - 2026-10-20
+
+### Fixed
+
+- Ignore empty paragraph separators when detecting headings and infer four distinct bold heading sizes by relative font-size order.
+
 ## [v0.2.11] - 2026-10-20
 
 ### Changed

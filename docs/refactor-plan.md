@@ -59,7 +59,7 @@ Keep the currently implemented semantic formatting as the baseline for the new s
 | Line breaks                     | Normalize CRLF and CR to LF internally, retaining style offsets, and serialize each `<br>` followed by content on its own indented source line.                           |
 | Bullet prefixes and indentation | Recognize the existing bullet markers and whitespace rules, remove their prefixes, and emit nested `<ul>`/`<li>` structures. Keep a monospace dash-prefixed line as code. |
 | Craft toggles                   | Keep the `+` marker without copied leading indentation; when its text uses heading-sized type, emit a heading element without the marker.                                 |
-| Heading-sized text              | Infer `<h1>` through `<h4>` from copied font sizes; the RTF stream does not expose Craft's semantic heading level.                                                        |
+| Heading-sized text              | Infer `<h1>` through `<h4>` from copied font sizes, using relative ordering when four or more distinct bold heading sizes occur; ignore empty separator paragraphs.       |
 | Unicode text                    | Preserve characters, including emoji and combining sequences, without splitting or duplicating them at style boundaries.                                                  |
 
 Return one deterministic HTML fragment, without a document shell, stylesheet, or alternate compact/pretty formats. Keep inline tags with their text and indent nested block elements by two spaces per level. Do not recreate the old formatter's special boundary-sharing rules; preserve semantic behavior rather than every previous source-layout snapshot.

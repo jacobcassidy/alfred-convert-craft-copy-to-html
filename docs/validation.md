@@ -4,7 +4,7 @@
 
 The macOS JXA harness covers ten conversion groups, twenty workflow scenarios, and four notification-adapter states. It uses RTF fixtures, AppKit attributed strings, isolated named pasteboards, simulated copy operations, and recording notifications. It does not read or alter the general clipboard, send real keys, or display notifications.
 
-Conversion checks cover combined semantic styles, bare code tags, escaping, allowed and disallowed links, Unicode graphemes, CRLF/CR/LF offsets and line formatting, nested bullets, monospace markers, whitespace, empty block removal, toggle markers, heading-sized text, and ordinary text around lists. Clipboard checks verify one item with exactly one explicitly declared plain-text representation containing the HTML source. Known system-generated aliases are accounted for separately.
+Conversion checks cover combined semantic styles, bare code tags, escaping, allowed and disallowed links, Unicode graphemes, CRLF/CR/LF offsets and line formatting, nested bullets, monospace markers, whitespace, empty block removal, toggle markers, four heading levels separated by blank paragraphs, and ordinary text around lists. Clipboard checks verify one item with exactly one explicitly declared plain-text representation containing the HTML source. Known system-generated aliases are accounted for separately.
 
 Failure checks cover missing/invalid/empty RTF, conversion and preparation errors, held modifiers, denied or stale copies, focus changes before Copy, clipboard revision changes, failed writes, and repeated invocation. Simulated focus changes after Copy confirm processing continues. Preservation assertions check both contents and revision. Success is reported only after writing the HTML source.
 
@@ -23,7 +23,7 @@ The builder uses Apple's Xcode Command Line Tools and local ad-hoc signing. The 
 
 ## Live acceptance
 
-After importing 0.2.11:
+After importing 0.2.12:
 
 1. Restore Control-Command-C if Alfred clears it. Keep Related Apps restricted to Craft and the modifier behavior set to “Pass through modifier keys (Fastest)”.
 2. Select nonprivate formatted content in Craft, trigger the shortcut, and release the keys. Confirm a started notification followed by a separate ready notification, with Craft remaining active. A failed run must post a separate failure notification.

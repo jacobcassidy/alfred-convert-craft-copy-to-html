@@ -230,6 +230,30 @@ function checkConversion(root) {
     "heading-sized Craft text uses semantic heading elements",
   );
 
+  const separatedHeadings = attributedText("Hello\n\nHello\n\nHello\n\nHello");
+
+  for (const [offset, size] of [
+    [0, 22],
+    [7, 19],
+    [14, 18],
+    [21, 16],
+  ]) {
+    separatedHeadings.addAttributeValueRange(
+      $.NSFontAttributeName,
+      $.NSFont.fontWithNameSize("Helvetica-Bold", size),
+      $.NSMakeRange(offset, 5),
+    );
+  }
+
+  const separatedHeadingHTML = "<div>\n  <h1>Hello</h1>\n  <h2>Hello</h2>\n  <h3>Hello</h3>\n  <h4>Hello</h4>\n</div>";
+
+  equal(
+    serialize(parseAttributed(separatedHeadings)),
+    separatedHeadingHTML,
+    "four distinct heading font sizes map by relative order without empty headings",
+  );
+  equal(convert(rtfData(separatedHeadings)), separatedHeadingHTML, "RTF heading paragraphs omit empty headings");
+
   return 10;
 }
 
