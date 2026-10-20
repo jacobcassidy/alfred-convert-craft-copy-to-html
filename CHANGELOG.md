@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restricted the planned shortcut to the active native Craft app, with bundle-identifier validation and runtime focus checks before copying and writing output.
 - Updated the refactor plan to use one shortcut that copies and converts the Craft selection, with no Alfred keywords.
 - Changed bold and italic HTML output to use `<strong>` and `<em>` instead of `<b>` and `<i>`.
 - Documented uv's default installation path, PATH verification, and how to avoid temporary installation directories.
