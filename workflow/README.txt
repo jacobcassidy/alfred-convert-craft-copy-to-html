@@ -19,5 +19,5 @@ Enable formatted paste in Anki. If code styling disappears, inspect the field HT
 
 DEVELOPMENT
 Runtime uses built-in macOS osascript and AppKit; no downloads or network calls.
-Run python3 test.py to check conversion and workflow wiring without changing the clipboard.
-Run python3 build.py to rebuild the importable workflow.
+Run python3 tests/test_conversion.py to check conversion and workflow wiring without changing the clipboard.
+Run python3 scripts/build.py to rebuild the importable workflow.

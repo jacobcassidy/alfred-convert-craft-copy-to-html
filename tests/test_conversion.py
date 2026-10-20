@@ -1,11 +1,13 @@
 from pathlib import Path
 import json, plistlib, subprocess
-p = Path(__file__).resolve().parent
-r = json.loads(subprocess.check_output(['/usr/bin/osascript', '-l', 'JavaScript', str(p / 'convert.js'), str(p / 'test.rtf')]))
+project = Path(__file__).resolve().parent.parent
+workflow = project / 'workflow'
+fixtures = project / 'tests' / 'fixtures'
+r = json.loads(subprocess.check_output(['/usr/bin/osascript', '-l', 'JavaScript', str(workflow / 'convert.js'), str(fixtures / 'formatting.rtf')]))
 for expected in ('<i>are</i>', '<b>immutable</b>', '<s>unique</s>', 'frozenset([1, 2, 4])</code>', '&lt; &amp; &gt;', '<br>next line'):
     assert expected in r['html'], expected
 assert r['plain'] == 'Frozen sets are merely immutable. unique frozenset([1, 2, 4]) < & >\nnext line'
-info = plistlib.loads((p / 'info.plist').read_bytes())
+info = plistlib.loads((workflow / 'info.plist').read_bytes())
 objects = {o['uid']: o for o in info['objects']}
 hotkey = objects['copy-hotkey']['config']
 assert hotkey['hotkey'] == 8 and hotkey['hotmod'] == 1572864
@@ -19,7 +21,7 @@ print('Conversion and hotkey wiring checks passed.')
 
 # Regression: Craft bullet indentation must become semantic HTML lists.
 def convert_fixture(name):
-    return json.loads(subprocess.check_output(['/usr/bin/osascript', '-l', 'JavaScript', str(p / 'convert.js'), str(p / name)]))
+    return json.loads(subprocess.check_output(['/usr/bin/osascript', '-l', 'JavaScript', str(workflow / 'convert.js'), str(fixtures / name)]))
 r = convert_fixture('bullets.rtf')
 assert r['html'].count('<ul>') == 1
 assert r['html'].count('<li>') == 2
@@ -43,7 +45,7 @@ assert '<code style="font-family:monospace;white-space:pre-wrap">None</code> is'
 print('Indented block HTML checks passed.')
 
 # Check the exact requested wrapper layouts without touching the clipboard.
-source = (p / 'convert.js').read_text()
+source = (workflow / 'convert.js').read_text()
 source = source[:source.index('function run(argv)')]
 examples = [
     ('<div><ul><li><code>1</code></li></ul></div>', '<div><ul>\n<li><code>1</code></li>\n</ul></div>'),
