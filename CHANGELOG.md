@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `docs/python-setup.md` with the planned uv and Ruff installation, configuration, npm script aliases, development commands, and Lefthook integration.
+- Added `docs/python-setup.md` with the planned uv and Ruff installation, configuration, npm script aliases for checking the project root, development commands, and Lefthook integration.
 
 ### Changed
 

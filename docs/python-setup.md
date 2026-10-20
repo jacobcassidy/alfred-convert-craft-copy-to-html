@@ -82,10 +82,10 @@ Merge these entries into the existing `scripts` object in `package.json`:
 {
   "scripts": {
     "python:setup": "uv sync --locked",
-    "lint:python": "uv run --locked ruff check scripts tests",
-    "lint:python:fix": "uv run --locked ruff check --fix scripts tests",
-    "format:python": "uv run --locked ruff format scripts tests",
-    "format:python:check": "uv run --locked ruff format --check scripts tests",
+    "lint:python": "uv run --locked ruff check .",
+    "lint:python:fix": "uv run --locked ruff check --fix .",
+    "format:python": "uv run --locked ruff format .",
+    "format:python:check": "uv run --locked ruff format --check .",
     "test:python": "uv run --locked python tests/test_conversion.py",
     "build:workflow": "uv run --locked python scripts/build.py"
   }
@@ -152,7 +152,7 @@ pre-commit:
 
 With `parallel: false`, the priorities put lint fixes before formatting. The Python globs restrict Ruff to staged Python files. `stage_fixed: true` stages the resulting edits automatically; lint errors that remain will block the commit. See Lefthook's [priority](https://lefthook.dev/configuration/priority/) and [stage_fixed](https://lefthook.dev/configuration/stage_fixed/) documentation.
 
-The hooks call uv directly to pass exactly `{staged_files}`. The npm lint and format aliases above always target all files in `scripts` and `tests`, so use those for manual project checks.
+The hooks call uv directly to pass exactly `{staged_files}`. The npm lint and format aliases above discover supported files from the project root, respecting Ruff's ignore and exclusion settings, so use those for manual project checks.
 
 For a fresh checkout, install the existing Node tools and Git hooks as well:
 
