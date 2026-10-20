@@ -1,7 +1,7 @@
 Convert Craft Copy to HTML
 
 INSTALL
-Open convert-craft-copy-to-html.alfredworkflow and import/update it in Alfred (Powerpack required).
+Open dist/convert-craft-copy-to-html.alfredworkflow and import/update it in Alfred (Powerpack required).
 The included hotkey is Option-Command-C (Alt-Cmd-C). If Alfred clears it on import or reports a conflict, double-click the Hotkey object and assign your preferred combination.
 
 USE

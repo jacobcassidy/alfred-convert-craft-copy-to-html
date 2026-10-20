@@ -4,7 +4,7 @@ An Alfred workflow that converts rich text copied from Craft into HTML for pasti
 
 ## Build
 
-Run `python3 scripts/build.py` to create `convert-craft-copy-to-html.alfredworkflow` in the project root. The build reads the workflow version from `workflow/info.plist` and packages the files in `workflow/` at the archive root for Alfred.
+Run `python3 scripts/build.py` to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `workflow/info.plist` and packages the files in `workflow/` at the archive root for Alfred.
 
 ## Checks
 
