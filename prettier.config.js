@@ -1,11 +1,11 @@
 /**
  * Prettier configuration.
+ * @file Configure Prettier formatting and multiline array behavior.
  *
  * @author CassidyDC <info@cassidydc.com>
  * @see https://prettier.io/docs/configuration
  * @type {import("prettier").Config}
  * @version 1.0.0
- * @file Configure Prettier formatting and multiline array behavior.
  */
 
 const config = {

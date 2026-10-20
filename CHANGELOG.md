@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated JavaScript declarations, JSDoc documentation, and spacing to follow `AGENTS.md` code rules.
+- Configured ESLint for the macOS JavaScript for Automation workflow runtime.
 - Organized Alfred sources under `workflow/`, conversion checks and RTF fixtures under `tests/`, and the build script under `scripts/`.
 - Added a root `README.md` with build and development instructions.
 - Moved the generated Alfred bundle into `dist/`.

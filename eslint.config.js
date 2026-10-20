@@ -1,11 +1,11 @@
 /**
  * ESLint configuration.
+ * @file Configure linting rules and ignored paths for the project.
  *
  * @author CassidyDC <info@cassidydc.com>
  * @see https://eslint.org/docs/latest/use/configure/configuration-files
  * @type {import("eslint").Linter.Config[]}
  * @version 1.0.0
- * @file Configure linting rules and ignored paths for the project.
  */
 
 import globals from "globals";
@@ -40,6 +40,18 @@ export default defineConfig([
     rules: {
       "no-unused-vars": "warn",
       yoda: ["warn", "never"],
+    },
+  },
+  {
+    files: ["workflow/**/*.js"],
+    languageOptions: {
+      sourceType: "script",
+      globals: {
+        $: "readonly",
+        Application: "readonly",
+        ObjC: "readonly",
+        delay: "readonly",
+      },
     },
   },
 ]);
