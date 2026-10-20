@@ -8,6 +8,10 @@
 
 ## Code Rules for JavaScript
 
+### Variables
+
+- When creating a variable definition, use the `const` keyword whenever possible, `let` only when needed for mutability, and `var` only if absolutely needed, such as for special hoisting situations.
+
 ### Documentation
 
 - Add a JSDoc block before each function definition, including const arrow functions.
