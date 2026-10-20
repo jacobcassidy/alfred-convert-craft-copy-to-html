@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Added
+
+- Added `docs/python-setup.md` with the planned uv and Ruff installation, configuration, development commands, and Lefthook integration.
+
 ### Changed
 
 - Updated JavaScript declarations, JSDoc documentation, and spacing to follow `AGENTS.md` code rules.

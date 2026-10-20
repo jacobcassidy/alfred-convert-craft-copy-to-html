@@ -10,6 +10,8 @@ Run `python3 scripts/build.py` to create `dist/convert-craft-copy-to-html.alfred
 
 Run `python3 tests/test_conversion.py` to check conversion output and workflow wiring without changing the clipboard. The RTF fixtures are in `tests/fixtures/`.
 
+See the [Python setup plan](docs/python-setup.md) for installing uv and Ruff, sharing dependencies, and adding Python checks to Lefthook.
+
 ## Project layout
 
 - `workflow/` contains the Alfred workflow source files.
