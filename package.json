@@ -1,0 +1,44 @@
+{
+  "name": "@cassidydc/cassidydc-toolset",
+  "displayName": "CassidyDC Toolset",
+  "version": "1.0.0",
+	"description": "CassidyDC code formatting and linting development toolset",
+	"author": {
+		"name": "CassidyDC",
+		"email": "info@cassidydc.com",
+		"url": "https://cassidydc.com"
+	},
+	"homepage": "https://github.com/CassidyDC/cassidydc-toolset/blob/main/README.md",
+	"license": "MIT",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/CassidyDC/cassidydc-toolset"
+	},
+	"bugs": {
+		"url": "https://github.com/CassidyDC/cassidydc-toolset/issues"
+	},
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.13.0",
+    "lefthook": "^2.2.2",
+    "markdownlint-cli2": "^0.23.3",
+    "prettier": "^3.9.10",
+    "prettier-plugin-multiline-arrays": "^4.1.11"
+  },
+  "scripts": {
+    "check": "npx prettier . --check",
+    "format": "npx prettier . --write",
+    "lint:docs": "npx markdownlint-cli2 \"**/*.md\"",
+    "lint:docs:fix": "npx markdownlint-cli2 \"**/*.md\" --fix",
+    "lint:scripts": "eslint . --max-warnings 0",
+    "lint:scripts:fix": "npx eslint --fix",
+    "test": "node --test"
+  },
+  "allowScripts": {
+    "lefthook@2.1.10": true,
+    "unrs-resolver@1.12.2": true
+  }
+}

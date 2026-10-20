@@ -1,0 +1,7 @@
+# Ignore development directories
+/node_modules
+
+# Ignore development files
+*.log
+docs/TODO.md
+
