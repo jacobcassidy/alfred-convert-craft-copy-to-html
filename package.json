@@ -37,12 +37,12 @@
     "lint:scripts": "eslint . --max-warnings 0",
     "lint:scripts:fix": "npx eslint --fix",
     "test": "node --test",
-    "python:setup": "uv sync --locked",
-    "lint:python": "uv run --locked ruff check .",
-    "lint:python:fix": "uv run --locked ruff check --fix .",
-    "format:python": "uv run --locked ruff format .",
-    "format:python:check": "uv run --locked ruff format --check .",
-    "test:python": "uv run --locked python tests/test_conversion.py",
+    "py:setup": "uv sync --locked",
+    "lint:py": "uv run --locked ruff check .",
+    "lint:py:fix": "uv run --locked ruff check --fix .",
+    "format:py": "uv run --locked ruff format .",
+    "format:py:check": "uv run --locked ruff format --check .",
+    "test:py": "uv run --locked python tests/test_conversion.py",
     "build:workflow": "uv run --locked python scripts/build.py"
   },
   "allowScripts": {

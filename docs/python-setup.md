@@ -80,12 +80,12 @@ The local environment and Ruff cache are excluded by `.gitignore`:
 ```json
 {
   "scripts": {
-    "python:setup": "uv sync --locked",
-    "lint:python": "uv run --locked ruff check .",
-    "lint:python:fix": "uv run --locked ruff check --fix .",
-    "format:python": "uv run --locked ruff format .",
-    "format:python:check": "uv run --locked ruff format --check .",
-    "test:python": "uv run --locked python tests/test_conversion.py",
+    "py:setup": "uv sync --locked",
+    "lint:py": "uv run --locked ruff check .",
+    "lint:py:fix": "uv run --locked ruff check --fix .",
+    "format:py": "uv run --locked ruff format .",
+    "format:py:check": "uv run --locked ruff format --check .",
+    "test:py": "uv run --locked python tests/test_conversion.py",
     "build:workflow": "uv run --locked python scripts/build.py"
   }
 }
@@ -93,15 +93,15 @@ The local environment and Ruff cache are excluded by `.gitignore`:
 
 The existing npm scripts, including `check`, `format`, and `test`, remain available. The Python aliases use the project's uv environment; Ruff remains a Python development dependency. See [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).
 
-| Task                               | Command                       |
-| ---------------------------------- | ----------------------------- |
-| Install the shared environment     | `npm run python:setup`        |
-| Check Python lint rules            | `npm run lint:python`         |
-| Apply available lint fixes         | `npm run lint:python:fix`     |
-| Format Python files                | `npm run format:python`       |
-| Check Python formatting            | `npm run format:python:check` |
-| Run conversion and workflow checks | `npm run test:python`         |
-| Build the Alfred workflow bundle   | `npm run build:workflow`      |
+| Task                               | Command                   |
+| ---------------------------------- | ------------------------- |
+| Install the shared environment     | `npm run py:setup`        |
+| Check Python lint rules            | `npm run lint:py`         |
+| Apply available lint fixes         | `npm run lint:py:fix`     |
+| Format Python files                | `npm run format:py`       |
+| Check Python formatting            | `npm run format:py:check` |
+| Run conversion and workflow checks | `npm run test:py`         |
+| Build the Alfred workflow bundle   | `npm run build:workflow`  |
 
 `uv run` prepares the project environment before running each command; manual virtual-environment activation is unnecessary. `--locked` reports an error if the manifest and lockfile disagree. See [running commands with uv](https://docs.astral.sh/uv/concepts/projects/run/).
 
@@ -157,7 +157,7 @@ For a fresh checkout, install the existing Node tools and Git hooks as well:
 
 ```sh
 npm ci
-npm run python:setup
+npm run py:setup
 npm run hook:install
 ```
 
@@ -166,11 +166,11 @@ npm run hook:install
 Apply lint fixes before formatting, then run the checks:
 
 ```sh
-npm run lint:python:fix
-npm run format:python
-npm run lint:python
-npm run format:python:check
-npm run test:python
+npm run lint:py:fix
+npm run format:py
+npm run lint:py
+npm run format:py:check
+npm run test:py
 npm run check
 npm run lint:docs
 ```

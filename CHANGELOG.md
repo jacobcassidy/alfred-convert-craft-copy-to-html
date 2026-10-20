@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed the Python npm script aliases to use `py` and updated the documented commands.
 - Updated the README and Python setup guide to document the implemented development environment and commands.
 - Updated JavaScript declarations, JSDoc documentation, and spacing to follow `AGENTS.md` code rules.
 - Configured ESLint for the macOS JavaScript for Automation workflow runtime.
