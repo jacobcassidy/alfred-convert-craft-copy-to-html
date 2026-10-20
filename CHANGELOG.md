@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a root `README.md` with build and development instructions.
 - Moved the generated Alfred bundle into `dist/`.
 
-
 ## [v0.1.0] - 2026-10-20
 
 ### Added

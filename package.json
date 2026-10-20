@@ -2,22 +2,22 @@
   "name": "@cassidydc/cassidydc-toolset",
   "displayName": "CassidyDC Toolset",
   "version": "1.0.0",
-	"description": "CassidyDC code formatting and linting development toolset",
-	"author": {
-		"name": "CassidyDC",
-		"email": "info@cassidydc.com",
-		"url": "https://cassidydc.com"
-	},
-	"homepage": "https://github.com/CassidyDC/cassidydc-toolset/blob/main/README.md",
-	"license": "MIT",
-	"type": "module",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/CassidyDC/cassidydc-toolset"
-	},
-	"bugs": {
-		"url": "https://github.com/CassidyDC/cassidydc-toolset/issues"
-	},
+  "description": "CassidyDC code formatting and linting development toolset",
+  "author": {
+    "name": "CassidyDC",
+    "email": "info@cassidydc.com",
+    "url": "https://cassidydc.com"
+  },
+  "homepage": "https://github.com/CassidyDC/cassidydc-toolset/blob/main/README.md",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CassidyDC/cassidydc-toolset"
+  },
+  "bugs": {
+    "url": "https://github.com/CassidyDC/cassidydc-toolset/issues"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.13.0",
