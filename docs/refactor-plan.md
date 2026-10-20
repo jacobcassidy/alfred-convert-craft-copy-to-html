@@ -9,7 +9,7 @@ Build a small Alfred workflow from scratch with one job: use a keyboard shortcut
 “Plain-text HTML” means literal HTML markup that a text editor can paste and display. It does not mean stripping tags out of HTML. For example, a Craft selection containing bold “Hello” and ordinary “world” produces:
 
 ```html
-<div><strong>Hello</strong> world</div>
+<div><b>Hello</b> world</div>
 ```
 
 The clipboard must contain exactly one item with one explicitly published representation: `NSPasteboardTypeString` (`public.utf8-plain-text`). Its value is the HTML string. Do not publish `NSPasteboardTypeHTML`, RTF, the original unformatted text, alternate output flavors, or additional clipboard items. The receiving application chooses how to use the literal source.
@@ -53,7 +53,7 @@ Keep the currently implemented semantic formatting as the baseline for the new s
 | Input content                   | Single HTML output                                                                                                                                                                            |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Ordinary text                   | Escape HTML-sensitive characters and place the result in an outer `<div>`.                                                                                                                    |
-| Bold, italic, underline, strike | Use `<strong>`, `<em>`, `<u>`, and `<s>`; support combinations with deterministic nesting.                                                                                                    |
+| Bold, italic, underline, strike | Use `<b>`, `<i>`, `<u>`, and `<s>`; support combinations with deterministic nesting.                                                                                                          |
 | Monospace text                  | Wrap text in `<code>…</code>` with no attributes. Retain the existing monospace trait/font-name detection baseline.                                                                           |
 | Web and mail links              | Use escaped `<a href="…">` destinations for `http:`, `https:`, and `mailto:` only. Unsupported destinations retain visible text.                                                              |
 | Line breaks                     | Normalize CRLF and CR to LF internally, retaining style offsets, and serialize each `<br>` followed by content on its own indented source line.                                               |

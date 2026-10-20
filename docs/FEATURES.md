@@ -11,7 +11,7 @@ The result is one HTML string, explicitly published as the only representation o
 | Craft content                   | HTML source                                                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- |
 | Ordinary text                   | Escaped text inside an outer `<div>`                                                           |
-| Bold, italic, underline, strike | `<strong>`, `<em>`, `<u>`, `<s>`, with deterministic combination order                         |
+| Bold, italic, underline, strike | `<b>`, `<i>`, `<u>`, `<s>`, with deterministic combination order                               |
 | Heading-sized text              | `<h1>` through `<h4>`, selected by copied font size                                            |
 | Monospace fonts                 | Bare `<code>` tags, including when combined with other styles                                  |
 | HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only                            |

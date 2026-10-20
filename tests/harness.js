@@ -100,7 +100,7 @@ function checkConversion(root) {
 
   equal(
     fixtureHTML.formatting,
-    "<div>Frozen sets <em>are</em> merely <strong>immutable</strong>. <s>unique</s> <code>frozenset([1, 2, 4])</code> &lt; &amp; &gt;<br>\n  next line</div>",
+    "<div>Frozen sets <i>are</i> merely <b>immutable</b>. <s>unique</s> <code>frozenset([1, 2, 4])</code> &lt; &amp; &gt;<br>\n  next line</div>",
     "baseline formatting",
   );
   equal((fixtureHTML.bullets.match(/<li>/g) || []).length, 2, "bullet item count");
@@ -108,10 +108,7 @@ function checkConversion(root) {
   assert(fixtureHTML.nested.includes("- keep this code"), "monospace dash remains code");
   assert(fixtureHTML.nested.includes("After"), "ordinary text after list");
   assert(fixtureHTML.extended.includes("<u>underlined</u>"), "RTF underline");
-  assert(
-    fixtureHTML.extended.includes("<s><u><em><strong><code>combined</code></strong></em></u></s>"),
-    "combined RTF styles",
-  );
+  assert(fixtureHTML.extended.includes("<s><u><i><b><code>combined</code></b></i></u></s>"), "combined RTF styles");
 
   const endings = attributedText("A\r\nB\rC\nD");
 
@@ -167,7 +164,7 @@ function checkConversion(root) {
   );
   equal(
     convert(rtfData(code)),
-    "<div><em><strong><code>  x\t y  </code></strong></em></div>",
+    "<div><i><b><code>  x\t y  </code></b></i></div>",
     "bare combined code retains whitespace",
   );
 
@@ -193,7 +190,7 @@ function checkConversion(root) {
   );
   equal(
     serialize(parseAttributed(paddedBold)),
-    "<div><strong>bold text</strong></div>",
+    "<div><b>bold text</b></div>",
     "non-code inline tag edge whitespace is removed",
   );
 

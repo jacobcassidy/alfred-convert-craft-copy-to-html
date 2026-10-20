@@ -122,9 +122,9 @@ function renderInline(text, style) {
 
   if (style.code) html = "<code>" + html + "</code>";
 
-  if (style.bold) html = "<strong>" + html + "</strong>";
+  if (style.bold) html = "<b>" + html + "</b>";
 
-  if (style.italic) html = "<em>" + html + "</em>";
+  if (style.italic) html = "<i>" + html + "</i>";
 
   if (style.underline) html = "<u>" + html + "</u>";
 
@@ -265,7 +265,7 @@ function serialize(model) {
       if (lines[cursor].heading) {
         const line = lines[cursor++];
 
-        const title = renderRange(line.titleStart, line.end).replace(/<\/?strong>/g, "");
+        const title = renderRange(line.titleStart, line.end).replace(/<\/?b>/g, "");
 
         blocks.push("<h" + line.heading + ">" + title + "</h" + line.heading + ">");
 

@@ -11,7 +11,7 @@
 	<key>name</key>
 	<string>Convert Craft Copy to HTML</string>
 	<key>version</key>
-	<string>0.2.14</string>
+	<string>0.2.15</string>
 	<key>description</key>
 	<string>Copy the active Craft selection as plain-text HTML source</string>
 	<key>objects</key>
@@ -120,7 +120,7 @@ Allow Craft HTML Notifications in macOS System Settings &gt; Notifications and i
 Copy automation may require Alfred in System Settings &gt; Privacy &amp; Security &gt; Accessibility, and permission to control System Events under Automation. An automation denial or copy timeout is reported instead of converting stale clipboard contents.
 
 OUTPUT
-The clipboard contains one item explicitly publishing only public.utf8-plain-text. Its value is the generated HTML source, including literal tags. For example: &lt;div&gt;&lt;strong&gt;Hello&lt;/strong&gt; world&lt;/div&gt;
+The clipboard contains one item explicitly publishing only public.utf8-plain-text. Its value is the generated HTML source, including literal tags. For example: &lt;div&gt;&lt;b&gt;Hello&lt;/b&gt; world&lt;/div&gt;
 The result is intended for pasting as source. Applications no longer receive a rich-HTML representation, original unformatted text, or retained RTF.
 
 FORMATTING

@@ -11,7 +11,7 @@ Allow Craft HTML Notifications in macOS System Settings > Notifications and its 
 Copy automation may require Alfred in System Settings > Privacy & Security > Accessibility, and permission to control System Events under Automation. An automation denial or copy timeout is reported instead of converting stale clipboard contents.
 
 OUTPUT
-The clipboard contains one item explicitly publishing only public.utf8-plain-text. Its value is the generated HTML source, including literal tags. For example: <div><strong>Hello</strong> world</div>
+The clipboard contains one item explicitly publishing only public.utf8-plain-text. Its value is the generated HTML source, including literal tags. For example: <div><b>Hello</b> world</div>
 The result is intended for pasting as source. Applications no longer receive a rich-HTML representation, original unformatted text, or retained RTF.
 
 FORMATTING

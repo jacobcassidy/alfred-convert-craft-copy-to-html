@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.15] - 2026-10-20
+
+### Changed
+
+- Emit `<b>` and `<i>` for bold and italic text to match Anki's supported formatting tags.
+
 ## [v0.2.14] - 2026-10-20
 
 ### Fixed

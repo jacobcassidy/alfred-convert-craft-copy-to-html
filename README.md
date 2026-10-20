@@ -12,7 +12,7 @@ An Alfred workflow that copies the selected rich text from the native Craft app 
 For example, bold “Hello” followed by ordinary “world” becomes the clipboard string:
 
 ```html
-<div><strong>Hello</strong> world</div>
+<div><b>Hello</b> world</div>
 ```
 
 The clipboard contains one item explicitly publishing only `public.utf8-plain-text`. The string includes the HTML tags. The workflow does not publish rich HTML, original unformatted text, or RTF, and does not paste automatically.
