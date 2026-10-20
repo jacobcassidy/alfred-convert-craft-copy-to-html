@@ -190,6 +190,12 @@ function checkConversion(root) {
   );
   assert(!/<(?:div|li|ul)>\s*<\/(?:div|li|ul)>/.test(emptyBlocks), "no empty block elements");
 
+  equal(
+    serialize(parseAttributed(attributedText("  + Toggle\n\t+ Nested"))),
+    "<div>+ Toggle<br>\n  + Nested</div>",
+    "Craft toggle plus markers have no preceding source whitespace",
+  );
+
   return 10;
 }
 

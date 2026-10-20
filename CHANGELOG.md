@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.7] - 2026-10-20
+
+### Fixed
+
+- Remove copied leading indentation before Craft toggle `+` markers while preserving the marker and its following text.
+
 ## [v0.2.6] - 2026-10-20
 
 ### Fixed

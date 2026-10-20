@@ -163,11 +163,14 @@ function serialize(model) {
 
   for (const line of model.text.split("\n")) {
     let marker = /^([ \t\u00a0]*)([-•◦▪‣])([ \t\u00a0]+)/.exec(line);
+    const toggle = /^([ \t\u00a0]*)\+([ \t\u00a0]+)/.exec(line);
 
     if (marker && model.styles[offset + marker[1].length].code) marker = null;
 
+    const start = toggle && !model.styles[offset + toggle[1].length].code ? offset + toggle[1].length : offset;
+
     lines.push({
-      start: offset + (marker ? marker[0].length : 0),
+      start: marker ? offset + marker[0].length : start,
       end: offset + line.length,
       bullet: !!marker,
       indent: marker ? marker[1].replace(/\t/g, "    ").length : 0,
