@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>local.jacob.craft-to-anki</string>
+	<key>connections</key>
+	<dict>
+		<key>convert</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>notify</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>copy-convert</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>notify</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>copy-hotkey</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>copy-convert</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>keyword</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>convert</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Jacob</string>
+	<key>description</key>
+	<string>Preserve Craft inline code when pasting into Anki</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Convert Craft Copy to HTML</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>craftanki</string>
+				<key>subtext</key>
+				<string>Convert copied rich text to HTML with code tags</string>
+				<key>text</key>
+				<string>Prepare Craft text for Anki</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>keyword</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/bin/osascript -l JavaScript "./convert.js"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>convert</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Convert Craft Copy to HTML</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>notify</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>8</integer>
+				<key>hotmod</key>
+				<integer>1572864</integer>
+				<key>hotstring</key>
+				<string>C</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>copy-hotkey</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/bin/osascript -l JavaScript "./convert.js" --copy</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>copy-convert</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Convert Craft Copy to HTML 1.4.0
+
+INSTALL
+Open Convert Craft Copy to HTML.alfredworkflow and import/update it in Alfred (Powerpack required).
+The included hotkey is Option-Command-C (Alt-Cmd-C). If Alfred clears it on import or reports a conflict, double-click the Hotkey object and assign your preferred combination.
+
+USE
+Select text in the native Craft app, release other keys, and press Option-Command-C. After the notification, switch to Anki and paste with Command-V. The workflow sends Copy to Craft, waits for fresh clipboard content, and converts monospace runs into HTML code tags. It does not paste automatically.
+The existing craftanki keyword still converts text you have already copied.
+
+PERMISSIONS
+For the hotkey to send Command-C, macOS may require Alfred in System Settings &gt; Privacy &amp; Security &gt; Accessibility and permission to control System Events under Automation. The workflow reports a copy timeout or permission error instead of converting old clipboard text.
+
+FORMATTING
+HTML block elements use new lines without indentation; inline tags stay with their text. A div containing one block child shares its opening and closing lines. A div with multiple block children uses separate boundary lines. Outer blocks use normal whitespace so source indentation does not create visible blank lines. Code keeps pre-wrap whitespace.
+Bullet paragraphs become HTML ul/li lists, including nested indentation. Inline code remains inside each list item. Monospace lines starting with a dash remain code.
+Preserves bold, italic, underline, strikethrough, web/mail links, and line breaks. Retains plain text and original RTF alongside HTML. Font colors, sizes, and exact layout are omitted. Any monospace text is treated as code. Uses the current clipboard, not Alfred history.
+Enable formatted paste in Anki. If code styling disappears, inspect the field HTML with &lt;/&gt;.
+
+DEVELOPMENT
+Runtime uses built-in macOS osascript and AppKit; no downloads or network calls.
+Run python3 test.py to check conversion and workflow wiring without changing the clipboard.
+Run python3 build.py to rebuild the importable workflow.
+</string>
+	<key>uidata</key>
+	<dict>
+		<key>convert</key>
+		<dict>
+			<key>xpos</key>
+			<integer>360</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>copy-convert</key>
+		<dict>
+			<key>xpos</key>
+			<integer>360</integer>
+			<key>ypos</key>
+			<integer>280</integer>
+		</dict>
+		<key>copy-hotkey</key>
+		<dict>
+			<key>xpos</key>
+			<integer>80</integer>
+			<key>ypos</key>
+			<integer>280</integer>
+		</dict>
+		<key>keyword</key>
+		<dict>
+			<key>xpos</key>
+			<integer>80</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+		<key>notify</key>
+		<dict>
+			<key>xpos</key>
+			<integer>640</integer>
+			<key>ypos</key>
+			<integer>100</integer>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>1.4.0</string>
+</dict>
+</plist>
