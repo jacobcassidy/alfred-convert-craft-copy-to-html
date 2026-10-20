@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.6] - 2026-10-20
+
+### Fixed
+
+- Omit empty generated text blocks, list containers, and list items while preserving blank lines between content.
+
 ## [v0.2.5] - 2026-10-20
 
 ### Changed

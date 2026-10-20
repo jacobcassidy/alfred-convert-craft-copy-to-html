@@ -181,6 +181,15 @@ function checkConversion(root) {
   );
   assert(markerHTML.endsWith("  </ul>\n  <div>After</div>\n</div>"), "two-space block indentation");
 
+  const emptyBlocks = serialize(parseAttributed(attributedText("Before\n- \nAfter")));
+
+  equal(
+    emptyBlocks,
+    "<div>\n  <div>Before</div>\n  <div>After</div>\n</div>",
+    "empty list items and text blocks are removed",
+  );
+  assert(!/<(?:div|li|ul)>\s*<\/(?:div|li|ul)>/.test(emptyBlocks), "no empty block elements");
+
   return 10;
 }
 

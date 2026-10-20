@@ -196,8 +196,12 @@ function serialize(model) {
         item += "\n" + renderList(lines[cursor].indent, level + 2);
       }
 
-      items.push(item + (item.includes("\n") ? "\n" + childSpaces : "") + "</li>");
+      if (item !== childSpaces + "<li>") {
+        items.push(item + (item.includes("\n") ? "\n" + childSpaces : "") + "</li>");
+      }
     }
+
+    if (items.length === 1) return "";
 
     items.push(spaces + "</ul>");
 
@@ -218,7 +222,9 @@ function serialize(model) {
 
   while (cursor < lines.length) {
     if (lines[cursor].bullet) {
-      blocks.push(renderList(lines[cursor].indent, 0));
+      const list = renderList(lines[cursor].indent, 0);
+
+      if (list) blocks.push(list);
     } else {
       const text = [];
 
@@ -227,6 +233,8 @@ function serialize(model) {
 
         text.push(renderRange(line.start, line.end));
       }
+
+      if (text.length === 1 && !renderRange(lines[cursor - 1].start, lines[cursor - 1].end)) continue;
 
       const content = text.join("<br>\n" + "  ".repeat(1));
 

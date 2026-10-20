@@ -11,7 +11,7 @@
 	<key>name</key>
 	<string>Convert Craft Copy to HTML</string>
 	<key>version</key>
-	<string>0.2.5</string>
+	<string>0.2.6</string>
 	<key>description</key>
 	<string>Copy the active Craft selection as plain-text HTML source</string>
 	<key>objects</key>
