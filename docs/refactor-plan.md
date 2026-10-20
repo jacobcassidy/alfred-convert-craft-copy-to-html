@@ -40,9 +40,9 @@ Configure the Alfred hotkey's Related Apps restriction to allow the shortcut onl
 
 Identify Craft by its bundle identifier, `com.lukilabs.lukiapp`, verified from the installed app's `Contents/Info.plist`. Use that identity for both the Alfred app restriction and runtime validation instead of matching the display name alone. The browser version of Craft is outside this workflow's scope.
 
-The runtime must independently verify the frontmost bundle identifier at entry and retain that process identifier. Check that the same Craft process is still active immediately before sending Copy, after the fresh copy arrives, and immediately before replacing the clipboard with HTML source. If focus changes, stop further processing without writing converted output. These checks cover focus changes during execution and direct invocation of the script even when Alfred's trigger restriction is bypassed.
+The runtime must independently verify the frontmost bundle identifier at entry and retain that process identifier. Check that the same Craft process is still active while waiting for shortcut modifiers and immediately before sending Copy. Once Copy is sent, wait for a fresh pasteboard revision and continue conversion if focus changes. Before writing, require that the captured pasteboard revision is still current; abort if another app changed the clipboard. This permits switching apps during conversion without overwriting newer clipboard contents.
 
-Copy automation uses System Events and may require Alfred's Accessibility permission and permission to control System Events under macOS Automation settings. Require Craft to remain frontmost while copying. Wait up to three seconds for shortcut modifiers to be released, confirm the frontmost process is unchanged, then send Command-C. Poll for a clipboard revision change for up to 2.5 seconds and check focus again before conversion. Report permission, modifier-release, focus, and copy-timeout failures instead of converting stale clipboard contents. A revision change alone cannot prove which application authored the copy.
+Copy automation uses System Events and may require Alfred's Accessibility permission and permission to control System Events under macOS Automation settings. Require Craft to remain frontmost until Command-C is sent. Wait up to three seconds for shortcut modifiers to be released, confirm the frontmost process is unchanged, then send Command-C. Poll for a clipboard revision change for up to 2.5 seconds. After the fresh revision arrives, continue regardless of focus, but preserve the final revision check before writing. Report permission, modifier-release, pre-copy focus, and copy-timeout failures instead of converting stale clipboard contents. A revision change alone cannot prove which application authored the copy.
 
 Input comes only from the fresh copy made by the shortcut. Require RTF; do not add HTML, Markdown, plain-text, file, existing-clipboard, or clipboard-history input fallbacks. Use Craft for manual acceptance testing.
 
@@ -72,7 +72,7 @@ Use the built-in macOS JXA and AppKit runtime, with no third-party runtime depen
 
 Keep responsibilities small and explicit:
 
-1. **Start and copy selection:** verify the frontmost app's Craft bundle identifier and record its process identifier, immediately show the started notification, wait for shortcut modifiers to be released, recheck focus, send Command-C, and require a fresh clipboard revision within the timeout.
+1. **Start and copy selection:** verify the frontmost app's Craft bundle identifier and record its process identifier, immediately show the started notification, wait for shortcut modifiers to be released, recheck focus, send Command-C, and require a fresh clipboard revision within the timeout. After Copy is sent, focus changes do not stop the run.
 2. **Read input:** capture the fresh pasteboard revision and RTF data without further clipboard changes.
 3. **Parse input:** decode RTF into an attributed string and extract text, styles, and line/list structure. Reject unreadable or empty input before writing converted output.
 4. **Serialize:** convert the parsed content into one escaped HTML string. The serializer does not access the clipboard or Alfred.
@@ -88,7 +88,7 @@ Follow `AGENTS.md` for JavaScript documentation, declaration keywords, spacing, 
 ### Copy and clipboard failures
 
 - Outside Craft: Alfred must not trigger the workflow. If the script is invoked directly while another app is active, reject it before sending Copy or changing the clipboard.
-- Shortcut modifiers remain held, focus changes, Copy is denied, or no fresh copy arrives: report the specific problem and stop further processing without writing converted output.
+- Shortcut modifiers remain held, focus changes before Copy, Copy is denied, or no fresh copy arrives: report the specific problem and stop further processing without writing converted output.
 - Missing RTF in the fresh copy: report “Select formatted text in Craft and try the shortcut again.” Leave the freshly copied contents unchanged.
 - Unreadable or empty RTF: report a conversion failure. Leave the freshly copied contents unchanged.
 - Conversion failure: report the error before writing converted output.
@@ -117,7 +117,7 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 - Implement input validation, the clipboard revision check, and a writer that declares only `NSPasteboardTypeString` with the generated HTML value.
 - Remove all output writes of `NSPasteboardTypeHTML` and `NSPasteboardTypeRTF`, and the write of the original plain text.
 - Implement the guarded Craft-copy operation as the required first step of the sole production path. Retain the useful focus, modifier-release, and fresh-copy safeguards from the old workflow without retaining its optional copy mode.
-- Replace display-name matching with Craft's bundle identifier and validate the original frontmost process before Copy, after Copy, and before the output write.
+- Replace display-name matching with Craft's bundle identifier and validate the original frontmost process before sending Copy. After a fresh copy is detected, use clipboard revision checks to protect newer contents while allowing focus to change.
 - Remove `--copy`, production file arguments, and Anki-specific status text.
 
 ### 3. Replace Alfred wiring
@@ -143,7 +143,7 @@ Use the existing Python test entry point and a JXA test harness. Replace obsolet
 | Failure preservation   | Missing/invalid/empty RTF and conversion failures do not change the seeded clipboard. A revision change before writing preserves the newer contents.                                                                                                                                         |
 | Write failure          | A controlled failed-write case returns an error rather than a success notification.                                                                                                                                                                                                          |
 | Copy safeguards        | Simulated focus, modifier, permission, and timeout failures stop conversion. A stale clipboard is never used, and conversion starts only after a fresh copy and focus validation.                                                                                                            |
-| Craft-only execution   | Reject a non-Craft bundle identifier even if its display name is Craft. Direct invocation outside Craft sends no keystrokes and changes no clipboard contents. A focus change before Copy, after Copy, or before writing prevents the output write.                                          |
+| Craft-only execution   | Reject a non-Craft bundle identifier even if its display name is Craft. Direct invocation outside Craft sends no keystrokes and changes no clipboard contents. A focus change before Copy stops the run; a focus change after the fresh copy does not.                                       |
 | Repeated invocation    | Each invocation requests a fresh Craft copy. A failed subsequent copy does not convert the previous HTML result.                                                                                                                                                                             |
 | Notification lifecycle | Recorded calls show started after Craft validation and before modifier waiting or Copy, then ready only after a successful clipboard write. Started and the terminal result have distinct identities. Every failure after start posts a separate error notification and never reports ready. |
 | Workflow graph         | Exactly one hotkey trigger has the default binding and a Craft-only app restriction; one nonconcurrent action manages notification updates; every connection is valid. No keyword objects, end-only notification output, or alternate invocation paths exist.                                |
@@ -177,7 +177,7 @@ npm run build:workflow
 
 Import the rebuilt workflow into Alfred, select text in Craft, and press Control-Command-C to verify copying and conversion in one shortcut. Paste into a plain-text editor and confirm that literal HTML tags appear. Inspect the pasteboard to confirm that the workflow publishes only the HTML source as plain text. Verify shortcut reassignment, permission-error reporting, modifier-release handling, focus changes, and copy timeouts manually. Confirm that exactly one shortcut path and no Alfred keywords remain after updating an existing installation.
 
-Confirm that “Conversion started.” appears immediately while Craft remains active, including while shortcut modifiers are still held. Verify that successful completion posts a separate “HTML copy is ready to paste.” notification. Exercise a failure after start and verify that it posts a separate error notification. Each run should have one started notification and one terminal result. Check that notifications do not steal focus and that repeated shortcuts during an active run do not create competing runs or duplicate notifications.
+Confirm that “Conversion started.” appears immediately while Craft remains active, including while shortcut modifiers are still held. Verify that successful completion posts a separate “HTML copy is ready to paste.” notification. Switch apps after Copy is sent and confirm that conversion still completes; change the clipboard during conversion and confirm that the newer value is preserved. Exercise a failure after start and verify that it posts a separate error notification. Each run should have one started notification and one terminal result. Check that notifications do not steal focus and that repeated shortcuts during an active run do not create competing runs or duplicate notifications.
 
 With Craft running in the background, make another app active and press the shortcut. Confirm that the workflow does not launch, send Copy, show its notification, or alter the clipboard. Repeat after shortcut reassignment and after importing an update. Switch away from Craft during a run and confirm that the runtime guard prevents writing HTML output.
 

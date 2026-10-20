@@ -315,8 +315,6 @@ function copySelection(pasteboard, operations, pid) {
   deadline = operations.now() + 2500;
 
   while (Number(pasteboard.changeCount) === revision) {
-    requireFocus(operations, pid);
-
     if (operations.now() >= deadline)
       throw new Error(
         "No new copy detected. Select text in Craft and try again; existing clipboard was not converted.",
@@ -324,8 +322,6 @@ function copySelection(pasteboard, operations, pid) {
 
     operations.pause();
   }
-
-  requireFocus(operations, pid);
 }
 
 /**
@@ -364,13 +360,9 @@ function prepareOutput(html) {
  * @param {object} pasteboard Destination pasteboard.
  * @param {number} revision Expected input revision.
  * @param {object} item Prepared plain-text item.
- * @param {object} operations Platform operations.
- * @param {number} pid Original Craft process.
  */
-function writeOutput(pasteboard, revision, item, operations, pid) {
+function writeOutput(pasteboard, revision, item) {
   const items = $.NSArray.arrayWithObject(item);
-
-  requireFocus(operations, pid);
 
   if (Number(pasteboard.changeCount) !== revision) throw new Error(REVISION_ERROR);
 
@@ -404,7 +396,7 @@ function execute(pasteboard, operations, notifications) {
     const html = operations.convert(input.data);
     const item = operations.prepare(html);
 
-    writeOutput(pasteboard, input.revision, item, operations, app.pid);
+    writeOutput(pasteboard, input.revision, item);
     notifications.finish(identity, READY);
 
     return READY;

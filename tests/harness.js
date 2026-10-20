@@ -388,10 +388,10 @@ function checkWorkflow() {
     { name: "newer clipboard", options: { revision: true }, error: "Clipboard changed" },
     { name: "focus before Copy", options: { focus: beforeCopy }, error: "Focus changed" },
     { name: "different Craft process", options: { focus: differentProcess }, error: "Focus changed" },
-    { name: "focus after Copy", options: { focus: afterCopy }, error: "Focus changed" },
-    { name: "focus before write", options: { focus: beforeWrite }, error: "Focus changed" },
+    { name: "focus after Copy", options: { focus: afterCopy } },
+    { name: "focus before write", options: { focus: beforeWrite } },
     { name: "focus while modifiers held", options: { held: true, focus: beforeCopy }, error: "Focus changed" },
-    { name: "focus during fresh-copy wait", options: { stale: true, focus: afterCopy }, error: "Focus changed" },
+    { name: "focus during fresh-copy wait", options: { stale: true, focus: afterCopy }, error: "No new copy" },
     { name: "write failed", options: { write: true }, error: "Could not write" },
   ];
 
@@ -509,6 +509,11 @@ function checkWorkflow() {
           assert(!testCase.events.includes("convert"), test.name + " never converts stale input");
       } else {
         equal(result, READY, test.name + " status");
+
+        if (test.name === "focus after Copy" || test.name === "focus before write") {
+          equal(testCase.events.filter((event) => event === "focus").length, 2, test.name + " does not recheck focus");
+        }
+
         equal(clipboardText(pasteboard), "<div>Hello</div>", "literal HTML source");
         equal(Number(pasteboard.pasteboardItems.count), 1, "one output item");
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.11] - 2026-10-20
+
+### Changed
+
+- Continue conversion after Command-C when focus moves away from Craft, while retaining the fresh-copy and clipboard-revision safeguards.
+
 ## [v0.2.10] - 2026-10-20
 
 ### Changed

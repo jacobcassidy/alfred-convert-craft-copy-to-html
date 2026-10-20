@@ -2,7 +2,7 @@ Convert Craft Copy to HTML
 
 INSTALL AND USE
 Import convert-craft-copy-to-html.alfredworkflow into Alfred (Powerpack required).
-Select formatted content in the native Craft app and press Control-Command-C (Ctrl+Cmd+C, ⌃⌘C). Release the shortcut keys and keep Craft active until conversion finishes. Paste with Command-V wherever you need literal HTML source.
+Select formatted content in the native Craft app and press Control-Command-C (Ctrl+Cmd+C, ⌃⌘C). Release the shortcut keys and keep Craft active until Command-C is sent. After the fresh copy arrives, conversion can finish even if you switch apps. Paste with Command-V wherever you need literal HTML source.
 If Alfred clears the shortcut or reports a conflict, assign a preferred combination in the Hotkey object. Keep Related Apps set to “only active when the following apps have focus” with Craft selected.
 
 STATUS AND PERMISSIONS
@@ -21,7 +21,7 @@ Craft toggle lines keep their `+` marker and remove whitespace copied before it.
 Heading-sized text is mapped to `<h1>` through `<h4>` from its copied font size (24, 20, 17, and 15 pt thresholds). Numbered lists, task states, images, attachments, tables, colors, and exact Craft layout are outside the conversion scope.
 
 FAILURES
-Every invocation makes a fresh Craft copy and requires RTF. Keep the original Craft process active until completion. Held modifiers time out after three seconds; copying times out after 2.5 seconds.
+Every invocation makes a fresh Craft copy and requires RTF. Keep the original Craft process active until Copy is sent. A clipboard change after copying cancels the write, but changing apps alone does not. Held modifiers time out after three seconds; copying times out after 2.5 seconds.
 Missing, invalid, or empty RTF and conversion failures leave the fresh copy unchanged. A changed clipboard revision preserves the newer copy. Copying itself replaces the contents from before the shortcut. The final clear/write sequence is not atomic: a write failure after clearing can leave the clipboard empty and is reported explicitly.
 
 DEVELOPMENT

@@ -17,7 +17,7 @@ For example, bold “Hello” followed by ordinary “world” becomes the clipb
 
 The clipboard contains one item explicitly publishing only `public.utf8-plain-text`. The string includes the HTML tags. The workflow does not publish rich HTML, original unformatted text, or RTF, and does not paste automatically.
 
-The shortcut is active only while Craft has focus. If Alfred clears the binding on import or reports a conflict, reassign it in the Hotkey object and keep **Related Apps → only active when the following apps have focus → Craft**. Runtime checks also require the same Craft process before copying, after copying, and before writing the result. The Craft browser app is outside the workflow's scope.
+The shortcut is active only while Craft has focus. If Alfred clears the binding on import or reports a conflict, reassign it in the Hotkey object and keep **Related Apps → only active when the following apps have focus → Craft**. Runtime checks require the same Craft process before sending Copy. Once a fresh Craft copy arrives, conversion can finish if you switch apps; a clipboard change before the result is written cancels the write. The Craft browser app is outside the workflow's scope.
 
 ## Permissions and failures
 
@@ -25,7 +25,7 @@ Allow Alfred under macOS **System Settings → Privacy & Security → Accessibil
 
 The action shows progress before waiting for the shortcut modifiers to be released. A bundled background notification app uses AppKit with separate notification identifiers for progress and the result. The helper provides the registered app identity that macOS requires for visible banners. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
 
-Every run makes a fresh Craft copy and requires RTF. Missing, unreadable, or empty rich text and conversion failures preserve the contents present after copying. Focus changes stop conversion, and a clipboard change during conversion preserves the newer contents. Modifier release times out after three seconds; a fresh copy must arrive within 2.5 seconds. Copying itself replaces the previous clipboard. The final clear/write operation is not atomic; a failed write can leave the clipboard empty and is reported as a failure.
+Every run makes a fresh Craft copy and requires RTF. Missing, unreadable, or empty rich text and conversion failures preserve the contents present after copying. Switching apps after Command-C is sent does not stop conversion; a clipboard change before writing preserves the newer contents. Focus changes before Copy stop the run. Modifier release times out after three seconds; a fresh copy must arrive within 2.5 seconds. Copying itself replaces the previous clipboard. The final clear/write operation is not atomic; a failed write can leave the clipboard empty and is reported as a failure.
 
 See [current features and limits](docs/FEATURES.md), [validation evidence](docs/validation.md), and the [previous feature inventory](docs/reference/v0.1.0/previous-features.md).
 

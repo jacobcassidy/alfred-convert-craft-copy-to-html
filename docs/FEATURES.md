@@ -2,7 +2,7 @@
 
 ## Copy HTML source from Craft
 
-Select formatted text in the native Craft app and press Control-Command-C. One nonconcurrent Alfred action checks Craft's bundle identity, shows “Conversion started.”, waits for modifier release, sends Command-C, and requires a fresh RTF copy. The same Craft process must remain frontmost before Copy, after Copy, and before writing output. The hotkey is restricted to Craft in Alfred's Related Apps configuration.
+Select formatted text in the native Craft app and press Control-Command-C. One nonconcurrent Alfred action checks Craft's bundle identity, shows “Conversion started.”, waits for modifier release, sends Command-C, and requires a fresh RTF copy. Craft must remain frontmost through sending Copy. After the fresh copy arrives, conversion and writing continue if focus moves to another app, provided the clipboard revision stays unchanged. The hotkey is restricted to Craft in Alfred's Related Apps configuration.
 
 The result is one HTML string, explicitly published as the only representation of one clipboard item: `public.utf8-plain-text`. Paste displays literal HTML tags in a text editor. Successful writing posts a separate “HTML copy is ready to paste.” notification; failures post a separate notification with the reason. A bundled background app supplies a registered macOS notification source and uses the workflow icon for its banners. Started and the result use distinct identifiers so both can appear as banners without taking focus. Allow the app named Craft HTML Notifications when prompted.
 
@@ -24,7 +24,7 @@ Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by s
 
 ## Failure handling and limits
 
-Each run copies afresh. Held modifiers, copy permission errors, copy timeouts, changed focus, missing/invalid/empty RTF, conversion failures, and clipboard revision changes produce specific errors. Input and preparation failures do not clear the fresh clipboard. A newer clipboard revision is preserved. A write failure after the final clear can leave the clipboard empty; the action reports failure and never publishes fallback types or a ready notification.
+Each run copies afresh. Held modifiers, copy permission errors, copy timeouts, focus changes before Copy, missing/invalid/empty RTF, conversion failures, and clipboard revision changes produce specific errors. Input and preparation failures do not clear the fresh clipboard. A newer clipboard revision is preserved. A write failure after the final clear can leave the clipboard empty; the action reports failure and never publishes fallback types or a ready notification.
 
 Numbered lists, task states, images, attachments, tables, font colors, syntax highlighting, and exact Craft layout are outside this release. Heading levels are inferred from copied font sizes (24 pt and up for h1, 20 for h2, 17 for h3, and 15 for h4); this is a best-effort mapping because Craft does not expose semantic heading levels in the RTF input. Inputs come only from the fresh Craft RTF copy. The workflow uses built-in macOS JXA and AppKit and requires Alfred Powerpack.
 
