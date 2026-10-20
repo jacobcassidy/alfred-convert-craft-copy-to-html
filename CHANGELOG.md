@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.17] - 2026-10-20
+
+### Fixed
+
+- Require bold styling as well as heading-sized text before emitting `<h1>` through `<h4>` elements.
+
 ## [v0.2.16] - 2026-10-20
 
 ### Fixed

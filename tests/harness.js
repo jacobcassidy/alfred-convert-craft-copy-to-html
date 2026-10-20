@@ -253,6 +253,32 @@ function checkConversion(root) {
     "heading-sized Craft text uses semantic heading elements",
   );
 
+  const regular15 = attributedText("Regular content");
+
+  regular15.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica", 15),
+    $.NSMakeRange(0, regular15.length),
+  );
+  equal(
+    serialize(parseAttributed(regular15)),
+    "<div>Regular content</div>",
+    "ordinary 15-point text stays directly inside the outer div",
+  );
+
+  const italic15 = attributedText("Italic content");
+
+  italic15.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Oblique", 15),
+    $.NSMakeRange(0, italic15.length),
+  );
+  equal(
+    serialize(parseAttributed(italic15)),
+    "<div><i>Italic content</i></div>",
+    "italic 15-point text stays an inline style rather than becoming a heading",
+  );
+
   const nestedToggleHeadings = attributedText("+ Parent\nTitle 1\nTitle 2\nTitle 3\nTitle 4");
 
   nestedToggleHeadings.addAttributeValueRange(

@@ -205,7 +205,7 @@ function serialize(model) {
       titleStart,
       fontSize: model.styles[headingOffset]?.fontSize || 0,
       bold: !!model.styles[headingOffset]?.bold,
-      heading: hasContent ? model.styles[headingOffset]?.heading || 0 : 0,
+      heading: hasContent && model.styles[headingOffset]?.bold ? model.styles[headingOffset]?.heading || 0 : 0,
     });
     offset += line.length + 1;
   }
