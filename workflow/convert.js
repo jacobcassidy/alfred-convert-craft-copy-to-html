@@ -209,12 +209,14 @@ function serialize(model) {
   }
 
   const headingSizes = [
-    ...new Set(lines.filter((line) => line.heading && line.bold).map((line) => line.fontSize)),
+    ...new Set(lines.filter((line) => line.heading && line.bold && !line.toggle).map((line) => line.fontSize)),
   ].sort((left, right) => right - left);
 
   if (headingSizes.length >= 4) {
     for (const line of lines) {
-      if (line.heading && line.bold) line.heading = Math.min(headingSizes.indexOf(line.fontSize) + 1, 4);
+      if (line.heading && line.bold && !line.toggle) {
+        line.heading = Math.min(headingSizes.indexOf(line.fontSize) + 1, 4);
+      }
     }
   }
 

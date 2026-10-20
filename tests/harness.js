@@ -256,6 +256,33 @@ function checkConversion(root) {
     "heading-sized Craft text uses semantic heading elements",
   );
 
+  const nestedToggleHeadings = attributedText("+ Parent\nTitle 1\nTitle 2\nTitle 3\nTitle 4");
+
+  nestedToggleHeadings.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Bold", 30),
+    $.NSMakeRange(2, 6),
+  );
+
+  for (const [offset, size] of [
+    [9, 24],
+    [17, 20],
+    [25, 17],
+    [33, 15],
+  ]) {
+    nestedToggleHeadings.addAttributeValueRange(
+      $.NSFontAttributeName,
+      $.NSFont.fontWithNameSize("Helvetica-Bold", size),
+      $.NSMakeRange(offset, 7),
+    );
+  }
+
+  equal(
+    serialize(parseAttributed(nestedToggleHeadings)),
+    "<div>\n  <h1>Parent</h1>\n  <h1>Title 1</h1>\n  <h2>Title 2</h2>\n  <h3>Title 3</h3>\n  <h4>Title 4</h4>\n</div>",
+    "heading-styled toggle titles do not shift nested heading levels",
+  );
+
   const separatedHeadings = attributedText("Hello\n\nHello\n\nHello\n\nHello");
 
   for (const [offset, size] of [
