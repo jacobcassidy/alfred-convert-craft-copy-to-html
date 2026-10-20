@@ -10,11 +10,16 @@ Install uv on macOS using Astral's standalone installer:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
+On macOS, the default installation directory is `~/.local/bin/`, which contains `uv` and `uvx`. Use this persistent user directory rather than a temporary directory such as `/private/tmp/`. Leave `UV_INSTALL_DIR` and `UV_UNMANAGED_INSTALL` unset for the default installation; XDG environment variables can also change the destination. See [uv installer options](https://docs.astral.sh/uv/reference/installer/).
+
 Open a new terminal so the installer's PATH changes take effect, then verify the installation:
 
 ```sh
+command -v uv
 uv --version
 ```
+
+With the default location, `command -v uv` should print `/Users/<your-user>/.local/bin/uv`. If the shell reports `uv: command not found`, ensure `export PATH="$HOME/.local/bin:$PATH"` is in `~/.zshrc`, then open a new terminal and verify again.
 
 Ensure `uv` is also available on the PATH used by Git hooks, including when committing from an editor. See the [uv installation instructions](https://docs.astral.sh/uv/getting-started/installation/).
 
