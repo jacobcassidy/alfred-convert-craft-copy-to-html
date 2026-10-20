@@ -50,15 +50,15 @@ Input comes only from the fresh copy made by the shortcut. Require RTF; do not a
 
 Keep the currently implemented semantic formatting as the baseline for the new serializer. This preserves useful Craft content while changing how the result is copied. Reimplement the contract independently of the old Anki-specific clipboard and automation code.
 
-| Input content                   | Single HTML output                                                                                                                                                                 |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ordinary text                   | Escape HTML-sensitive characters and place the result in an outer `<div>`.                                                                                                         |
-| Bold, italic, underline, strike | Use `<strong>`, `<em>`, `<u>`, and `<s>`; support combinations with deterministic nesting.                                                                                         |
-| Monospace text                  | Use `<code>` with `white-space:pre-wrap` and a monospace font style so spaces and line breaks remain meaningful. Retain the existing monospace trait/font-name detection baseline. |
-| Web and mail links              | Use escaped `<a href="…">` destinations for `http:`, `https:`, and `mailto:` only. Unsupported destinations retain visible text.                                                   |
-| Line breaks                     | Normalize CRLF and CR to LF internally, retaining corresponding style offsets correctly, and serialize text line breaks as `<br>`.                                                 |
-| Bullet prefixes and indentation | Recognize the existing bullet markers and whitespace rules, remove their prefixes, and emit nested `<ul>`/`<li>` structures. Keep a monospace dash-prefixed line as code.          |
-| Unicode text                    | Preserve characters, including emoji and combining sequences, without splitting or duplicating them at style boundaries.                                                           |
+| Input content                   | Single HTML output                                                                                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ordinary text                   | Escape HTML-sensitive characters and place the result in an outer `<div>`.                                                                                                |
+| Bold, italic, underline, strike | Use `<strong>`, `<em>`, `<u>`, and `<s>`; support combinations with deterministic nesting.                                                                                |
+| Monospace text                  | Wrap text in `<code>…</code>` with no attributes. Retain the existing monospace trait/font-name detection baseline.                                                       |
+| Web and mail links              | Use escaped `<a href="…">` destinations for `http:`, `https:`, and `mailto:` only. Unsupported destinations retain visible text.                                          |
+| Line breaks                     | Normalize CRLF and CR to LF internally, retaining corresponding style offsets correctly, and serialize text line breaks as `<br>`.                                        |
+| Bullet prefixes and indentation | Recognize the existing bullet markers and whitespace rules, remove their prefixes, and emit nested `<ul>`/`<li>` structures. Keep a monospace dash-prefixed line as code. |
+| Unicode text                    | Preserve characters, including emoji and combining sequences, without splitting or duplicating them at style boundaries.                                                  |
 
 Return one deterministic HTML fragment, without a document shell, stylesheet, or alternate compact/pretty formats. Keep inline tags with their text and use a single block-newline convention without indentation. Do not recreate the old formatter's special boundary-sharing rules; preserve semantic behavior rather than every previous source-layout snapshot.
 
@@ -110,6 +110,7 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 ### 2. Build the converter and single clipboard writer
 
 - Implement attributed-text parsing and the HTML serializer from the conversion scope.
+- Emit only bare `<code>` and `</code>` tags for code runs, including code combined with other formatting. Do not add style, class, or any other attributes to the code tag.
 - Return a string instead of the existing `{ html, plain }` result object.
 - Implement input validation, the clipboard revision check, and a writer that declares only `NSPasteboardTypeString` with the generated HTML value.
 - Remove all output writes of `NSPasteboardTypeHTML` and `NSPasteboardTypeRTF`, and the write of the original plain text.
@@ -133,6 +134,7 @@ Use the existing Python test entry point and a JXA test harness. Replace obsolet
 
 | Check                  | Required evidence                                                                                                                                                                                                                                                                   |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code tags              | Every code element uses exactly `<code>` and `</code>`, with no attributes, including when combined with other formatting or nested in a list item.                                                                                                                                 |
 | HTML conversion        | Fixtures cover escaping, style combinations, underline, strike, code whitespace, allowed/disallowed links, nested bullets, ordinary text around lists, Unicode, and all supported line endings.                                                                                     |
 | Output value           | The only published string equals the generated HTML, including tags; it is not the original plain text.                                                                                                                                                                             |
 | Output representations | Seed an isolated pasteboard with rich-text input and additional types, run the writer, and inspect the resulting item. Assert one item and exactly the explicitly declared plain-text type, with no HTML or RTF representation retained.                                            |
