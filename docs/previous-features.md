@@ -1,6 +1,6 @@
 # Previous workflow features
 
-This inventory records the workflow before the proposed plain-text HTML refactor. It describes the implementation at commit `25fe223`, workflow version `0.1.0`. The current runtime remains unchanged while the [refactor plan](refactor-plan.md) is being documented.
+This inventory records the workflow before the proposed plain-text HTML refactor. It describes the implementation at commit `25fe223`, workflow version `0.1.0`. The source files are now archived in [reference/v0.1.0/](reference/v0.1.0/) with unchanged runtime behavior. Source paths below are relative to that archive; development configuration and `dist/` remain at the repository root.
 
 ## Purpose and execution
 

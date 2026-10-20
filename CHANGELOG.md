@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the existing workflow, build script, conversion checks, and fixtures into `docs/reference/v0.1.0/` for reference during the refactor, and updated development commands and documentation to use the archived paths.
+
 - Updated the refactor plan to emit bare `<code>` and `</code>` tags without any attributes.
 - Updated the refactor plan to show an immediate conversion-started notification and replace it with a ready-to-paste message after a successful clipboard write, or a failure message if the run fails.
 - Changed the planned shortcut to Control-Command-C (Ctrl+Cmd+C) to avoid Craft's Option-Command-C Copy Format shortcut.

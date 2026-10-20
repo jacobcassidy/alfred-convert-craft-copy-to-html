@@ -1,6 +1,6 @@
 # Refactor plan: Craft copy to plain-text HTML
 
-Status: proposed implementation plan. This document and the [previous feature inventory](previous-features.md) do not change the existing workflow runtime.
+Status: proposed implementation plan. The existing workflow is archived in [reference/v0.1.0/](reference/v0.1.0/) alongside its build script and tests. The replacement paths below refer to new files at the repository root.
 
 ## Goal and output contract
 

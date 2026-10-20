@@ -4,7 +4,7 @@ An Alfred workflow that converts rich text copied from Craft into HTML for pasti
 
 ## Build
 
-Run `npm run build:workflow` after the development setup below to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `workflow/info.plist` and packages the files in `workflow/` at the archive root for Alfred.
+Run `npm run build:workflow` after the development setup below to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `docs/reference/v0.1.0/workflow/info.plist` and packages the files in `docs/reference/v0.1.0/workflow/` at the archive root for Alfred.
 
 ## Development
 
@@ -28,7 +28,7 @@ uv manages Python 3.11 or later and installs Ruff in `.venv/` using the committe
 | Run conversion and workflow checks | `npm run test:py`         |
 | Build the Alfred workflow bundle   | `npm run build:workflow`  |
 
-The conversion checks require macOS (`/usr/bin/osascript` and AppKit) and run without changing the clipboard. The RTF fixtures are in `tests/fixtures/`.
+The conversion checks require macOS (`/usr/bin/osascript` and AppKit) and run without changing the clipboard. The RTF fixtures are in `docs/reference/v0.1.0/tests/fixtures/`.
 
 The pre-commit hook runs Ruff lint fixes followed by formatting on staged Python files and stages the fixes. Existing JavaScript, Markdown, and Prettier hooks remain enabled. Use `npm run check` and `npm run lint:docs` for project formatting and documentation checks.
 
@@ -36,12 +36,12 @@ See [Python development setup](docs/python-setup.md) for installation, dependenc
 
 ## Refactor documentation
 
-The [previous feature inventory](docs/previous-features.md) documents the current workflow and its implementation. The [refactor plan](docs/refactor-plan.md) proposes a replacement that copies HTML source as the clipboard's only plain-text representation. These documents describe planned work; the current workflow behavior is unchanged.
+The [previous feature inventory](docs/previous-features.md) documents the current workflow and its implementation. The [refactor plan](docs/refactor-plan.md) proposes a replacement that copies HTML source as the clipboard's only plain-text representation. The existing workflow is archived in `docs/reference/v0.1.0/` as a reference for the replacement; its runtime behavior is unchanged.
 
 ## Project layout
 
-- `workflow/` contains the Alfred workflow source files.
-- `scripts/` contains the bundle build script.
-- `tests/` contains conversion checks and RTF fixtures.
+- `docs/reference/v0.1.0/workflow/` contains the archived Alfred workflow source files.
+- `docs/reference/v0.1.0/scripts/` contains the archived bundle build script.
+- `docs/reference/v0.1.0/tests/` contains the archived conversion checks and RTF fixtures.
 - `docs/` contains feature notes.
 - `CHANGELOG.md` records project changes.

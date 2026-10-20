@@ -90,8 +90,8 @@ The local environment and Ruff cache are excluded by `.gitignore`:
     "lint:py:fix": "uv run --locked ruff check --fix .",
     "format:py": "uv run --locked ruff format .",
     "format:py:check": "uv run --locked ruff format --check .",
-    "test:py": "uv run --locked python tests/test_conversion.py",
-    "build:workflow": "uv run --locked python scripts/build.py"
+    "test:py": "uv run --locked python docs/reference/v0.1.0/tests/test_conversion.py",
+    "build:workflow": "uv run --locked python docs/reference/v0.1.0/scripts/build.py"
   }
 }
 ```
@@ -112,7 +112,7 @@ The existing npm scripts, including `check`, `format`, and `test`, remain availa
 
 The VS Code workspace disables automatic terminal activation. It sets `python.useEnvironmentsExtension` to `false` to use the original Python extension's environment management, then sets `python.terminal.activateEnvironment` and `python.terminal.activateEnvInCurrentTerminal` to `false`. The newer Python Environments extension's `python-envs.terminal.autoActivationType` setting only supports User scope, so it cannot disable activation for this workspace alone. After changing these settings, run **Developer: Reload Window** and create a fresh terminal. The npm aliases continue to use the uv environment. See [Python environment settings and scope](https://code.visualstudio.com/docs/python/environments#settings-scope-reference).
 
-The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `workflow/info.plist`.
+The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `docs/reference/v0.1.0/workflow/info.plist`.
 
 ## 5. Git hooks
 

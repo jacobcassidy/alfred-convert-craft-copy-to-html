@@ -4,7 +4,7 @@ from pathlib import Path
 
 project = Path(__file__).resolve().parent.parent
 workflow = project / "workflow"
-dist = project / "dist"
+dist = project.parents[2] / "dist"
 dist.mkdir(exist_ok=True)
 with (workflow / "info.plist").open("rb") as plist_file:
     version = plistlib.load(plist_file)["version"]

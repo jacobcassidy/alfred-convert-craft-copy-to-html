@@ -18,7 +18,7 @@ const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
 
 export default defineConfig([
   includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
-  globalIgnores(["**/*.min.js", "docs"]),
+  globalIgnores(["**/*.min.js"]),
   {
     plugins: {
       "import-x": importX,
@@ -43,7 +43,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["workflow/**/*.js"],
+    files: ["**/workflow/**/*.js"],
     languageOptions: {
       sourceType: "script",
       globals: {

@@ -29,7 +29,7 @@
     "prettier-plugin-multiline-arrays": "^4.1.11"
   },
   "scripts": {
-    "build:workflow": "uv run --locked python scripts/build.py",
+    "build:workflow": "uv run --locked python docs/reference/v0.1.0/scripts/build.py",
     "check": "npx prettier . --check",
     "check:py": "uv run --locked ruff format --check .",
     "format": "npx prettier . --write",
@@ -43,7 +43,7 @@
     "lint:scripts:fix": "npx eslint --fix",
     "py:setup": "uv sync --locked",
     "test": "node --test",
-    "test:py": "uv run --locked python tests/test_conversion.py"
+    "test:py": "uv run --locked python docs/reference/v0.1.0/tests/test_conversion.py"
   },
   "allowScripts": {
     "lefthook@2.1.10": true,
