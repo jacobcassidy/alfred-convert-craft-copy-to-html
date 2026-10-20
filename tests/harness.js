@@ -166,10 +166,10 @@ function checkConversion(root) {
 
   equal((markerHTML.match(/<li>/g) || []).length, 5, "supported list markers");
   assert(
-    markerHTML.startsWith("<div>\n<div>Before</div>\n<ul>\n<li>one\n<ul>"),
+    markerHTML.startsWith("<div>\n  <div>Before</div>\n  <ul>\n    <li>one\n      <ul>"),
     "ordinary text and nested list structure",
   );
-  assert(markerHTML.endsWith("</ul>\n<div>After</div>\n</div>"), "single block newline convention");
+  assert(markerHTML.endsWith("  </ul>\n  <div>After</div>\n</div>"), "two-space block indentation");
 
   return 10;
 }

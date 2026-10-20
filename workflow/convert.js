@@ -180,23 +180,26 @@ function serialize(model) {
   /**
    * Render consecutive bullet lines at one indentation level.
    * @param {number} indent Current list indentation.
-   * @returns {string} List markup with unindented block newlines.
+   * @param {number} level HTML block indentation level.
+   * @returns {string} List markup with two-space block indentation.
    */
-  function renderList(indent) {
-    const items = ["<ul>"];
+  function renderList(indent, level) {
+    const spaces = "  ".repeat(level);
+    const childSpaces = "  ".repeat(level + 1);
+    const items = [spaces + "<ul>"];
 
     while (cursor < lines.length && lines[cursor].bullet && lines[cursor].indent === indent) {
       const line = lines[cursor++];
-      let item = "<li>" + renderRange(line.start, line.end);
+      let item = childSpaces + "<li>" + renderRange(line.start, line.end);
 
       while (cursor < lines.length && lines[cursor].bullet && lines[cursor].indent > indent) {
-        item += "\n" + renderList(lines[cursor].indent);
+        item += "\n" + renderList(lines[cursor].indent, level + 2);
       }
 
-      items.push(item + (item.includes("\n") ? "\n" : "") + "</li>");
+      items.push(item + (item.includes("\n") ? "\n" + childSpaces : "") + "</li>");
     }
 
-    items.push("</ul>");
+    items.push(spaces + "</ul>");
 
     return items.join("\n");
   }
@@ -215,7 +218,7 @@ function serialize(model) {
 
   while (cursor < lines.length) {
     if (lines[cursor].bullet) {
-      blocks.push(renderList(lines[cursor].indent));
+      blocks.push(renderList(lines[cursor].indent, 0));
     } else {
       const text = [];
 
@@ -229,7 +232,9 @@ function serialize(model) {
     }
   }
 
-  return hasLists ? "<div>\n" + blocks.join("\n") + "\n</div>" : "<div>" + blocks.join("") + "</div>";
+  return hasLists
+    ? "<div>\n" + blocks.join("\n").replace(/^/gm, "  ") + "\n</div>"
+    : "<div>" + blocks.join("") + "</div>";
 }
 
 /**

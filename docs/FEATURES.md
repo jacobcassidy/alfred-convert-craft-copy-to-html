@@ -18,7 +18,7 @@ The result is one HTML string, explicitly published as the only representation o
 | Bullet markers and indentation  | Nested `<ul>`/`<li>`; monospace marker-prefixed lines remain code      |
 | Emoji and combining sequences   | Preserved graphemes, using the first character's style at a boundary   |
 
-Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by spaces, tabs, or nonbreaking spaces. Tabs count as four spaces for list indentation. Block boundaries use newlines without indentation; inline markup stays with its text. Code whitespace remains in the HTML source; visual whitespace behavior is controlled by the receiving application's rendering rules.
+Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by spaces, tabs, or nonbreaking spaces. Tabs count as four spaces for list indentation. Nested block elements use new lines and two spaces of source indentation per level; inline markup stays with its text. Code whitespace remains in the HTML source; visual whitespace behavior is controlled by the receiving application's rendering rules.
 
 ## Failure handling and limits
 

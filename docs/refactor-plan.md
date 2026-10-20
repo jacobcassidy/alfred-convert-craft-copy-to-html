@@ -60,7 +60,7 @@ Keep the currently implemented semantic formatting as the baseline for the new s
 | Bullet prefixes and indentation | Recognize the existing bullet markers and whitespace rules, remove their prefixes, and emit nested `<ul>`/`<li>` structures. Keep a monospace dash-prefixed line as code. |
 | Unicode text                    | Preserve characters, including emoji and combining sequences, without splitting or duplicating them at style boundaries.                                                  |
 
-Return one deterministic HTML fragment, without a document shell, stylesheet, or alternate compact/pretty formats. Keep inline tags with their text and use a single block-newline convention without indentation. Do not recreate the old formatter's special boundary-sharing rules; preserve semantic behavior rather than every previous source-layout snapshot.
+Return one deterministic HTML fragment, without a document shell, stylesheet, or alternate compact/pretty formats. Keep inline tags with their text and indent nested block elements by two spaces per level. Do not recreate the old formatter's special boundary-sharing rules; preserve semantic behavior rather than every previous source-layout snapshot.
 
 Heading inference, numbered lists, task states, images, attachments, tables, syntax highlighting, font colors, font sizes, and exact Craft layout are outside this initial implementation. In particular, do not implement heading detection merely because the old feature notes claim it exists.
 

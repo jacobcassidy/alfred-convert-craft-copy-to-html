@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.4] - 2026-10-20
+
+### Changed
+
+- Indent nested block elements in generated HTML with two spaces per level.
+
 ## [v0.2.3] - 2026-10-20
 
 ### Changed
