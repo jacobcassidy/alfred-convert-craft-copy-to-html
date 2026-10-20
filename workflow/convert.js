@@ -112,6 +112,12 @@ function parseRTF(data) {
  * @returns {string} Inline HTML.
  */
 function renderInline(text, style) {
+  if (!style.code && (style.bold || style.italic || style.underline || style.strike || style.link)) {
+    text = text.trim();
+  }
+
+  if (!text) return "";
+
   let html = escapeHTML(text);
 
   if (style.code) html = "<code>" + html + "</code>";
@@ -147,6 +153,14 @@ function serialize(model) {
   function renderRange(start, end) {
     let html = "";
     let cursor = start;
+
+    while (cursor < end && !model.styles[cursor].code && /^\s$/.test(model.text[cursor])) {
+      cursor++;
+    }
+
+    while (end > cursor && !model.styles[end - 1].code && /^\s$/.test(model.text[end - 1])) {
+      end--;
+    }
 
     while (cursor < end) {
       const style = model.styles[cursor];

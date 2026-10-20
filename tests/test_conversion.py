@@ -42,7 +42,7 @@ assert len(info["connections"]["copy-hotkey"]) == 1
 assert info["connections"]["copy-hotkey"][0]["destinationuid"] == "convert"
 assert set(info["uidata"]) == set(objects)
 assert info["bundleid"] == "local.jacob.craft-to-anki"
-assert info["version"] == "0.2.12"
+assert info["version"] == "0.2.13"
 assert info["readme"] == (workflow / "README.txt").read_text()
 assert "--copy" not in source
 assert "NSPasteboardTypeHTML" not in source

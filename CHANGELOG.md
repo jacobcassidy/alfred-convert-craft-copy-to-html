@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.13] - 2026-10-20
+
+### Fixed
+
+- Remove leading and trailing whitespace from non-code HTML elements while preserving whitespace inside code.
+
 ## [v0.2.12] - 2026-10-20
 
 ### Fixed

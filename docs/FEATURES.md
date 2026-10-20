@@ -20,7 +20,7 @@ The result is one HTML string, explicitly published as the only representation o
 | Craft toggle markers            | Keep `+` and its text without leading indentation; heading-sized toggle text becomes a heading |
 | Emoji and combining sequences   | Preserved graphemes, using the first character's style at a boundary                           |
 
-Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by spaces, tabs, or nonbreaking spaces. Tabs count as four spaces for list indentation. Nested block elements use new lines and two spaces of source indentation per level; empty generated blocks are omitted, and inline markup stays with its text. Code whitespace remains in the HTML source; visual whitespace behavior is controlled by the receiving application's rendering rules.
+Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by spaces, tabs, or nonbreaking spaces. Tabs count as four spaces for list indentation. Nested block elements use new lines and two spaces of source indentation per level; empty generated blocks are omitted, and inline markup stays with its text. Leading and trailing whitespace inside non-code elements is removed. Code whitespace remains in the HTML source; visual whitespace behavior is controlled by the receiving application's rendering rules.
 
 ## Failure handling and limits
 

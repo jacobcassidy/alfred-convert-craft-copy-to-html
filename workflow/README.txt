@@ -16,7 +16,7 @@ The result is intended for pasting as source. Applications no longer receive a r
 
 FORMATTING
 Preserves bold, italic, underline, strike, safe http/https/mailto links, line breaks, Unicode, and nested bullet lists. Monospace text uses bare <code> tags with no attributes. Dash prefixes inside monospace text remain code. HTML-sensitive text and link attributes are escaped.
-Nested block elements use new lines and two spaces of source indentation per level. Each `<br>` is followed by the next content or break on its own indented source line. Inline tags stay with their text. Code whitespace is retained in the source; rendering whitespace is controlled by the receiving application.
+Nested block elements use new lines and two spaces of source indentation per level. Each `<br>` is followed by the next content or break on its own indented source line. Inline tags stay with their text. Leading and trailing whitespace inside non-code elements is removed; whitespace inside code elements is retained. Rendering whitespace is controlled by the receiving application.
 Craft toggle lines keep their `+` marker and remove whitespace copied before it. A toggle with heading-sized text becomes a heading and drops the `+` marker.
 Heading-sized text is mapped to `<h1>` through `<h4>` from its copied font size (24, 20, 17, and 15 pt thresholds). Four or more distinct bold heading sizes in one selection map by relative size order. Empty separator paragraphs do not create empty headings. Numbered lists, task states, images, attachments, tables, colors, and exact Craft layout are outside the conversion scope.
 

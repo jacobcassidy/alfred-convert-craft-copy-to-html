@@ -64,6 +64,8 @@ Keep the currently implemented semantic formatting as the baseline for the new s
 
 Return one deterministic HTML fragment, without a document shell, stylesheet, or alternate compact/pretty formats. Keep inline tags with their text and indent nested block elements by two spaces per level. Do not recreate the old formatter's special boundary-sharing rules; preserve semantic behavior rather than every previous source-layout snapshot.
 
+Trim leading and trailing whitespace inside generated elements, while retaining whitespace inside `<code>` and `<pre>` elements.
+
 Numbered lists, task states, images, attachments, tables, syntax highlighting, font colors, and exact Craft layout are outside this initial implementation. Heading levels use a best-effort font-size signal.
 
 ## Implementation design

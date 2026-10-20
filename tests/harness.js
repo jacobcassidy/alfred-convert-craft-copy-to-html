@@ -171,6 +171,32 @@ function checkConversion(root) {
     "bare combined code retains whitespace",
   );
 
+  const paddedHeading = attributedText("\tMy modifications for the Wrapper Meta-addon ");
+
+  paddedHeading.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Bold", 15),
+    $.NSMakeRange(0, paddedHeading.length),
+  );
+  equal(
+    serialize(parseAttributed(paddedHeading)),
+    "<div>\n  <h4>My modifications for the Wrapper Meta-addon</h4>\n</div>",
+    "heading edge whitespace is removed",
+  );
+
+  const paddedBold = attributedText("  bold text  ");
+
+  paddedBold.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Bold", 12),
+    $.NSMakeRange(0, paddedBold.length),
+  );
+  equal(
+    serialize(parseAttributed(paddedBold)),
+    "<div><strong>bold text</strong></div>",
+    "non-code inline tag edge whitespace is removed",
+  );
+
   const markers = attributedText("Before\n- one\n\t• child\n◦ two\n▪ three\n‣ four\nAfter");
   const markerHTML = convert(rtfData(markers));
 
