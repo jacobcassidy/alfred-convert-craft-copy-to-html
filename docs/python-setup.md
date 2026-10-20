@@ -30,7 +30,7 @@ The repository's `pyproject.toml` contains:
 ```toml
 [project]
 name = "convert-craft-copy-to-html"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python development tools for the Convert Craft Copy to HTML Alfred workflow"
 requires-python = ">=3.11"
 dependencies = []
@@ -89,30 +89,30 @@ The local environment and Ruff cache are excluded by `.gitignore`:
     "lint:py": "uv run --locked ruff check .",
     "lint:py:fix": "uv run --locked ruff check --fix .",
     "format:py": "uv run --locked ruff format .",
-    "format:py:check": "uv run --locked ruff format --check .",
-    "test:py": "uv run --locked python docs/reference/v0.1.0/tests/test_conversion.py",
-    "build:workflow": "uv run --locked python docs/reference/v0.1.0/scripts/build.py"
+    "check:py": "uv run --locked ruff format --check .",
+    "test:py": "uv run --locked python tests/test_conversion.py",
+    "build:workflow": "uv run --locked python scripts/build.py"
   }
 }
 ```
 
 The existing npm scripts, including `check`, `format`, and `test`, remain available. The Python aliases use the project's uv environment; Ruff remains a Python development dependency. See [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).
 
-| Task                               | Command                   |
-| ---------------------------------- | ------------------------- |
-| Install the shared environment     | `npm run py:setup`        |
-| Check Python lint rules            | `npm run lint:py`         |
-| Apply available lint fixes         | `npm run lint:py:fix`     |
-| Format Python files                | `npm run format:py`       |
-| Check Python formatting            | `npm run format:py:check` |
-| Run conversion and workflow checks | `npm run test:py`         |
-| Build the Alfred workflow bundle   | `npm run build:workflow`  |
+| Task                               | Command                  |
+| ---------------------------------- | ------------------------ |
+| Install the shared environment     | `npm run py:setup`       |
+| Check Python lint rules            | `npm run lint:py`        |
+| Apply available lint fixes         | `npm run lint:py:fix`    |
+| Format Python files                | `npm run format:py`      |
+| Check Python formatting            | `npm run check:py`       |
+| Run conversion and workflow checks | `npm run test:py`        |
+| Build the Alfred workflow bundle   | `npm run build:workflow` |
 
 `uv run` prepares the project environment before running each command; manual virtual-environment activation is unnecessary. `--locked` reports an error if the manifest and lockfile disagree. See [running commands with uv](https://docs.astral.sh/uv/concepts/projects/run/).
 
 The VS Code workspace disables automatic terminal activation. It sets `python.useEnvironmentsExtension` to `false` to use the original Python extension's environment management, then sets `python.terminal.activateEnvironment` and `python.terminal.activateEnvInCurrentTerminal` to `false`. The newer Python Environments extension's `python-envs.terminal.autoActivationType` setting only supports User scope, so it cannot disable activation for this workspace alone. After changing these settings, run **Developer: Reload Window** and create a fresh terminal. The npm aliases continue to use the uv environment. See [Python environment settings and scope](https://code.visualstudio.com/docs/python/environments#settings-scope-reference).
 
-The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `docs/reference/v0.1.0/workflow/info.plist`.
+The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `workflow/info.plist`.
 
 ## 5. Git hooks
 
@@ -176,7 +176,7 @@ Apply lint fixes before formatting, then run the checks:
 npm run lint:py:fix
 npm run format:py
 npm run lint:py
-npm run format:py:check
+npm run check:py
 npm run test:py
 npm run check
 npm run lint:docs

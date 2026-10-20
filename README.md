@@ -1,14 +1,37 @@
 # Convert Craft Copy to HTML
 
-An Alfred workflow that converts rich text copied from Craft into HTML for pasting into Anki.
+An Alfred workflow that copies the selected rich text from the native Craft app and converts it into literal HTML source on the clipboard.
 
-## Build
+## Install and use
 
-Run `npm run build:workflow` after the development setup below to create `dist/convert-craft-copy-to-html.alfredworkflow`. The build reads the workflow version from `docs/reference/v0.1.0/workflow/info.plist` and packages the files in `docs/reference/v0.1.0/workflow/` at the archive root for Alfred.
+1. Import [the workflow bundle](dist/convert-craft-copy-to-html.alfredworkflow) into Alfred. Alfred Powerpack is required.
+2. Select formatted text in Craft and press **Control-Command-C** (Ctrl+Cmd+C, ⌃⌘C).
+3. Release the keys and keep Craft active. “Conversion started.” is replaced by “HTML copy is ready to paste.” after the write succeeds, or by a specific failure message.
+4. Press Command-V wherever you need HTML source.
 
-## Development
+For example, bold “Hello” followed by ordinary “world” becomes the clipboard string:
 
-Install Node.js/npm and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run these commands from the repository root:
+```html
+<div><strong>Hello</strong> world</div>
+```
+
+The clipboard contains one item explicitly publishing only `public.utf8-plain-text`. The string includes the HTML tags. The workflow does not publish rich HTML, original unformatted text, or RTF, and does not paste automatically.
+
+The shortcut is active only while Craft has focus. If Alfred clears the binding on import or reports a conflict, reassign it in the Hotkey object and keep **Related Apps → only active when the following apps have focus → Craft**. Runtime checks also require the same Craft process before copying, after copying, and before writing the result. The Craft browser app is outside the workflow's scope.
+
+## Permissions and failures
+
+Allow Alfred under macOS **System Settings → Privacy & Security → Accessibility**, and allow control of **System Events** under **Automation** if prompted. Allow **osascript** notifications in **System Settings → Notifications** and its initial permission prompt. Enable banners and account for Focus settings to see status updates. Notifications do not take keyboard focus.
+
+The action shows progress before waiting for the shortcut modifiers to be released. It uses the built-in AppKit notification center and the same notification identifier for progress and its terminal replacement. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
+
+Every run makes a fresh Craft copy and requires RTF. Missing, unreadable, or empty rich text and conversion failures preserve the contents present after copying. Focus changes stop conversion, and a clipboard change during conversion preserves the newer contents. Modifier release times out after three seconds; a fresh copy must arrive within 2.5 seconds. Copying itself replaces the previous clipboard. The final clear/write operation is not atomic; a failed write can leave the clipboard empty and is reported as a failure.
+
+See [current features and limits](docs/FEATURES.md), [validation evidence](docs/validation.md), and the [previous feature inventory](docs/reference/v0.1.0/previous-features.md).
+
+## Build and development
+
+Install Node.js/npm and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from the repository root:
 
 ```sh
 npm ci
@@ -16,32 +39,30 @@ npm run py:setup
 npm run hook:install
 ```
 
-uv manages Python 3.11 or later and installs Ruff in `.venv/` using the committed `uv.lock`. Keep both `npm` and `uv` available on PATH, including for Git hooks run from an editor. Manual virtual-environment activation is unnecessary.
+uv manages Python 3.11 or later and installs Ruff in `.venv/` using `uv.lock`. Keep `npm` and `uv` on PATH, including for Git hooks. Manual environment activation is unnecessary. Runtime uses built-in macOS JXA and AppKit with no third-party dependencies or network calls.
 
-| Task                               | Command                   |
-| ---------------------------------- | ------------------------- |
-| Install the shared environment     | `npm run py:setup`        |
-| Check Python lint rules            | `npm run lint:py`         |
-| Apply available lint fixes         | `npm run lint:py:fix`     |
-| Format Python files                | `npm run format:py`       |
-| Check Python formatting            | `npm run format:py:check` |
-| Run conversion and workflow checks | `npm run test:py`         |
-| Build the Alfred workflow bundle   | `npm run build:workflow`  |
+| Task                       | Command                  |
+| -------------------------- | ------------------------ |
+| Set up Python              | `npm run py:setup`       |
+| Lint JavaScript            | `npm run lint:scripts`   |
+| Lint Python                | `npm run lint:py`        |
+| Fix Python lint            | `npm run lint:py:fix`    |
+| Format Python              | `npm run format:py`      |
+| Check Python formatting    | `npm run check:py`       |
+| Run native workflow checks | `npm run test:py`        |
+| Check project formatting   | `npm run check`          |
+| Lint documentation         | `npm run lint:docs`      |
+| Build the Alfred bundle    | `npm run build:workflow` |
 
-The conversion checks require macOS (`/usr/bin/osascript` and AppKit) and run without changing the clipboard. The RTF fixtures are in `docs/reference/v0.1.0/tests/fixtures/`.
+Tests require macOS and access to its pasteboard service. They use named pasteboards, RTF fixtures, simulated copy operations, and recording notifications; they never modify the general clipboard, send real keystrokes, or display notifications. They also check Alfred wiring and build an isolated package for inspection.
 
-The pre-commit hook runs Ruff lint fixes followed by formatting on staged Python files and stages the fixes. Existing JavaScript, Markdown, and Prettier hooks remain enabled. Use `npm run check` and `npm run lint:docs` for project formatting and documentation checks.
-
-See [Python development setup](docs/python-setup.md) for installation, dependency updates, configuration, and verification commands.
-
-## Refactor documentation
-
-The [previous feature inventory](docs/previous-features.md) documents the current workflow and its implementation. The [refactor plan](docs/refactor-plan.md) proposes a replacement that copies HTML source as the clipboard's only plain-text representation. The existing workflow is archived in `docs/reference/v0.1.0/` as a reference for the replacement; its runtime behavior is unchanged.
+The build reads `workflow/info.plist` and packages only the runtime, metadata, readme, and icon at the archive root in `dist/convert-craft-copy-to-html.alfredworkflow`. The pre-commit hook applies JavaScript, Markdown, Prettier, and Ruff checks to staged files. See [Python development setup](docs/python-setup.md).
 
 ## Project layout
 
-- `docs/reference/v0.1.0/workflow/` contains the archived Alfred workflow source files.
-- `docs/reference/v0.1.0/scripts/` contains the archived bundle build script.
-- `docs/reference/v0.1.0/tests/` contains the archived conversion checks and RTF fixtures.
-- `docs/` contains feature notes.
+- `workflow/` contains the current Alfred sources.
+- `scripts/` contains the bundle builder.
+- `tests/` contains the Python runner, JXA harness, and RTF fixtures.
+- `docs/reference/v0.1.0/` preserves the previous implementation for reference.
+- `docs/refactor-plan.md` records the replacement specification.
 - `CHANGELOG.md` records project changes.

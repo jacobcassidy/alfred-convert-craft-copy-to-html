@@ -43,7 +43,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/workflow/**/*.js"],
+    files: ["**/workflow/**/*.js", "tests/harness.js"],
     languageOptions: {
       sourceType: "script",
       globals: {

@@ -1,6 +1,6 @@
 # Refactor plan: Craft copy to plain-text HTML
 
-Status: proposed implementation plan. The existing workflow is archived in [reference/v0.1.0/](reference/v0.1.0/) alongside its build script and tests. The replacement paths below refer to new files at the repository root.
+Status: implemented in workflow version 0.2.0, with automated checks passing. See [validation evidence and remaining live checks](validation.md) for acceptance status. The previous workflow is archived in [reference/v0.1.0/](reference/v0.1.0/) alongside its build script and tests. The specification below records the replacement contract and original implementation plan.
 
 ## Goal and output contract
 
@@ -102,7 +102,7 @@ Every shortcut invocation must make a fresh Craft copy before conversion, includ
 
 ### 1. Establish the new baseline
 
-- Keep [previous-features.md](previous-features.md) as the record of the old behavior.
+- Keep [previous-features.md](reference/v0.1.0/previous-features.md) as the record of the old behavior.
 - Use the output contract above as the specification for the new implementation and tests.
 - Retain the existing RTF fixtures as conversion examples. Capture additional representative Craft copies for formatting combinations, links, underline, Unicode, and line endings.
 - Remove the old runtime implementation when the replacement is ready; do not ship an old/new selector or parallel legacy workflow.

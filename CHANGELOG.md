@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.0] - 2026-10-20
+
 ### Added
 
 - Added a complete inventory of the existing workflow in `docs/previous-features.md` and a from-scratch implementation plan in `docs/refactor-plan.md` for copying HTML source as the clipboard's only plain-text representation.
 - Added a uv-managed Python development environment with committed `pyproject.toml` and `uv.lock`, Ruff lint and format configuration, npm commands for Python setup, checks, and workflow builds, and staged Python fixes through Lefthook.
 - Added `docs/python-setup.md` with the planned uv and Ruff installation, configuration, npm script aliases for checking the project root, development commands, and Lefthook integration.
+- Added a Craft-only Control-Command-C shortcut with bundle and process identity checks, fresh-copy validation, and immediate progress notifications replaced by ready or failure under one notification identity.
+- Added native JXA conversion checks, isolated-pasteboard integration tests, simulated copy/focus/permission failures, notification lifecycle checks, and package validation.
 
 ### Changed
 
@@ -31,6 +35,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Organized Alfred sources under `workflow/`, conversion checks and RTF fixtures under `tests/`, and the build script under `scripts/`.
 - Added a root `README.md` with build and development instructions.
 - Moved the generated Alfred bundle into `dist/`.
+- Rebuilt the converter to return one HTML source string and publish it as the only explicit plain-text representation of one clipboard item.
+- Reimplemented semantic inline formatting, escaped safe links, Unicode graphemes, normalized line endings, and nested bullets with deterministic block newlines and bare code tags.
+- Rebuilt the Alfred graph as one Craft-restricted hotkey and one nonconcurrent copy-and-convert action; updated current documentation and the generated workflow bundle.
+
+### Removed
+
+- Removed keyword invocation, the optional copy flag, existing-clipboard/file input paths, and separate end-only notification output from the shipped workflow.
+- Removed rich-HTML, original-text, and RTF output representations. Pasting the result now supplies literal HTML source; the former formatted-paste behavior is unavailable.
 
 ## [v0.1.0] - 2026-10-20
 
