@@ -53,7 +53,7 @@ The proposed development baseline is Python 3.11 or later. `package = false` con
 
 The Ruff settings retain the existing 88-character formatting style, double quotes, and space indentation. The selected lint rules check common syntax and import errors, unused names, and import ordering. See [Ruff configuration](https://docs.astral.sh/ruff/configuration/) and [Ruff rules](https://docs.astral.sh/ruff/rules/).
 
-Commands will run directly through `uv run`. This setup does not need task aliases or a `[project.scripts]` table.
+Commands will use npm script aliases that invoke `uv run`. npm provides the shortcuts, while uv manages Python and Ruff. Both `npm` and `uv` must be available on PATH.
 
 ## 3. Install Ruff and lock the environment
 
@@ -74,17 +74,35 @@ Add these entries to `.gitignore`:
 /.ruff_cache/
 ```
 
-## 4. Use the development commands
+## 4. Add npm script aliases
 
-| Task                               | Command                                             |
-| ---------------------------------- | --------------------------------------------------- |
-| Install the shared environment     | `uv sync --locked`                                  |
-| Check Python lint rules            | `uv run --locked ruff check scripts tests`          |
-| Apply available lint fixes         | `uv run --locked ruff check --fix scripts tests`    |
-| Format Python files                | `uv run --locked ruff format scripts tests`         |
-| Check Python formatting            | `uv run --locked ruff format --check scripts tests` |
-| Run conversion and workflow checks | `uv run --locked python tests/test_conversion.py`   |
-| Build the Alfred workflow bundle   | `uv run --locked python scripts/build.py`           |
+Merge these entries into the existing `scripts` object in `package.json`:
+
+```json
+{
+  "scripts": {
+    "python:setup": "uv sync --locked",
+    "lint:python": "uv run --locked ruff check scripts tests",
+    "lint:python:fix": "uv run --locked ruff check --fix scripts tests",
+    "format:python": "uv run --locked ruff format scripts tests",
+    "format:python:check": "uv run --locked ruff format --check scripts tests",
+    "test:python": "uv run --locked python tests/test_conversion.py",
+    "build:workflow": "uv run --locked python scripts/build.py"
+  }
+}
+```
+
+Keep the existing npm scripts, including `check`, `format`, and `test`. The Python aliases use the project's uv environment; Ruff remains a Python development dependency. See [npm scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts/).
+
+| Task                               | Command                       |
+| ---------------------------------- | ----------------------------- |
+| Install the shared environment     | `npm run python:setup`        |
+| Check Python lint rules            | `npm run lint:python`         |
+| Apply available lint fixes         | `npm run lint:python:fix`     |
+| Format Python files                | `npm run format:python`       |
+| Check Python formatting            | `npm run format:python:check` |
+| Run conversion and workflow checks | `npm run test:python`         |
+| Build the Alfred workflow bundle   | `npm run build:workflow`      |
 
 `uv run` prepares the project environment before running each command; manual virtual-environment activation is unnecessary. `--locked` reports an error if the manifest and lockfile disagree. See [running commands with uv](https://docs.astral.sh/uv/concepts/projects/run/).
 
@@ -134,10 +152,13 @@ pre-commit:
 
 With `parallel: false`, the priorities put lint fixes before formatting. The Python globs restrict Ruff to staged Python files. `stage_fixed: true` stages the resulting edits automatically; lint errors that remain will block the commit. See Lefthook's [priority](https://lefthook.dev/configuration/priority/) and [stage_fixed](https://lefthook.dev/configuration/stage_fixed/) documentation.
 
+The hooks call uv directly to pass exactly `{staged_files}`. The npm lint and format aliases above always target all files in `scripts` and `tests`, so use those for manual project checks.
+
 For a fresh checkout, install the existing Node tools and Git hooks as well:
 
 ```sh
 npm ci
+npm run python:setup
 npm run hook:install
 ```
 
@@ -146,13 +167,13 @@ npm run hook:install
 Apply lint fixes before formatting, then run the checks:
 
 ```sh
-uv run --locked ruff check --fix scripts tests
-uv run --locked ruff format scripts tests
-uv run --locked ruff check scripts tests
-uv run --locked ruff format --check scripts tests
-uv run --locked python tests/test_conversion.py
+npm run lint:python:fix
+npm run format:python
+npm run lint:python
+npm run format:python:check
+npm run test:python
 npm run check
 npm run lint:docs
 ```
 
-Review any Python edits and commit them with `pyproject.toml`, `uv.lock`, `.gitignore`, and `lefthook.yml`. Update the README's development commands to match the table above when implementing the setup.
+Review any Python edits and commit them with `pyproject.toml`, `uv.lock`, `.gitignore`, `package.json`, and `lefthook.yml`. Keep both `package-lock.json` and `uv.lock` under version control; each records its ecosystem's dependency versions. Update the README's development commands to match the table above when implementing the setup.
