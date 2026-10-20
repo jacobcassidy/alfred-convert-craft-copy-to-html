@@ -280,6 +280,29 @@ function checkConversion(root) {
     "heading-styled toggle titles do not shift nested heading levels",
   );
 
+  const toggleTreeText =
+    "+ Getting Started\n  + Introduction\n    + A Brief Python History\n      + Where did Python get its name from?";
+  const toggleTree = attributedText(toggleTreeText);
+
+  for (const [title, size] of [
+    ["Getting Started", 24],
+    ["Introduction", 20],
+    ["A Brief Python History", 17],
+    ["Where did Python get its name from?", 17],
+  ]) {
+    toggleTree.addAttributeValueRange(
+      $.NSFontAttributeName,
+      $.NSFont.fontWithNameSize("Helvetica-Bold", size),
+      $.NSMakeRange(toggleTreeText.indexOf(title), title.length),
+    );
+  }
+
+  equal(
+    serialize(parseAttributed(toggleTree)),
+    "<div>\n  <h1>Getting Started</h1>\n  <h2>Introduction</h2>\n  <h3>A Brief Python History</h3>\n  <h4>Where did Python get its name from?</h4>\n</div>",
+    "four nested heading toggle levels follow their indentation even when font sizes repeat",
+  );
+
   const separatedHeadings = attributedText("Hello\n\nHello\n\nHello\n\nHello");
 
   for (const [offset, size] of [

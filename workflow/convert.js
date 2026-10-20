@@ -185,6 +185,7 @@ function serialize(model) {
     if (marker && model.styles[offset + marker[1].length].code) marker = null;
 
     const isToggle = !!toggle && !model.styles[offset + toggle[1].length].code;
+    const toggleIndent = isToggle ? toggle[1].replace(/\t/g, "    ").length : 0;
     const start = isToggle ? offset + toggle[1].length : offset;
     const titleStart = isToggle ? offset + toggle[0].length : start;
     const hasContent = !!model.text.slice(titleStart, offset + line.length).trim();
@@ -200,6 +201,7 @@ function serialize(model) {
       bullet: !!marker,
       indent: marker ? marker[1].replace(/\t/g, "    ").length : 0,
       toggle: isToggle,
+      toggleIndent,
       titleStart,
       fontSize: model.styles[headingOffset]?.fontSize || 0,
       bold: !!model.styles[headingOffset]?.bold,
@@ -211,6 +213,17 @@ function serialize(model) {
   const headingSizes = [
     ...new Set(lines.filter((line) => line.heading && line.bold && !line.toggle).map((line) => line.fontSize)),
   ].sort((left, right) => right - left);
+  const toggleIndents = [
+    ...new Set(lines.filter((line) => line.heading && line.bold && line.toggle).map((line) => line.toggleIndent)),
+  ].sort((left, right) => left - right);
+
+  if (toggleIndents.length >= 4) {
+    for (const line of lines) {
+      if (line.heading && line.bold && line.toggle) {
+        line.heading = Math.min(toggleIndents.indexOf(line.toggleIndent) + 1, 4);
+      }
+    }
+  }
 
   if (headingSizes.length >= 4) {
     for (const line of lines) {

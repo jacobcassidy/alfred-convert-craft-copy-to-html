@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.16] - 2026-10-20
+
+### Fixed
+
+- Infer heading levels from nested toggle indentation when four toggle depths are present, including repeated font sizes.
+
 ## [v0.2.15] - 2026-10-20
 
 ### Changed
