@@ -11,7 +11,7 @@
 	<key>name</key>
 	<string>Convert Craft Copy to HTML</string>
 	<key>version</key>
-	<string>0.2.4</string>
+	<string>0.2.5</string>
 	<key>description</key>
 	<string>Copy the active Craft selection as plain-text HTML source</string>
 	<key>objects</key>
@@ -125,7 +125,7 @@ The result is intended for pasting as source. Applications no longer receive a r
 
 FORMATTING
 Preserves bold, italic, underline, strike, safe http/https/mailto links, line breaks, Unicode, and nested bullet lists. Monospace text uses bare &lt;code&gt; tags with no attributes. Dash prefixes inside monospace text remain code. HTML-sensitive text and link attributes are escaped.
-Nested block elements use new lines and two spaces of source indentation per level. Inline tags stay with their text. Code whitespace is retained in the source; rendering whitespace is controlled by the receiving application.
+Nested block elements use new lines and two spaces of source indentation per level. Each `&lt;br&gt;` is followed by the next content or break on its own indented source line. Inline tags stay with their text. Code whitespace is retained in the source; rendering whitespace is controlled by the receiving application.
 Headings, numbered lists, task states, images, attachments, tables, colors, sizes, and exact Craft layout are outside the conversion scope.
 
 FAILURES

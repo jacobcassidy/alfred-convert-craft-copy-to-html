@@ -100,7 +100,7 @@ function checkConversion(root) {
 
   equal(
     fixtureHTML.formatting,
-    "<div>Frozen sets <em>are</em> merely <strong>immutable</strong>. <s>unique</s> <code>frozenset([1, 2, 4])</code> &lt; &amp; &gt;<br>next line</div>",
+    "<div>Frozen sets <em>are</em> merely <strong>immutable</strong>. <s>unique</s> <code>frozenset([1, 2, 4])</code> &lt; &amp; &gt;<br>\n  next line</div>",
     "baseline formatting",
   );
   equal((fixtureHTML.bullets.match(/<li>/g) || []).length, 2, "bullet item count");
@@ -116,8 +116,18 @@ function checkConversion(root) {
   const endings = attributedText("A\r\nB\rC\nD");
 
   endings.addAttributeValueRange($.NSUnderlineStyleAttributeName, $(1), $.NSMakeRange(3, 1));
-  equal(serialize(parseAttributed(endings)), "<div>A<br><u>B</u><br>C<br>D</div>", "line endings retain style offsets");
-  equal(convert(rtfData(endings)), "<div>A<br><u>B</u><br>C<br>D</div>", "RTF line endings");
+  equal(
+    serialize(parseAttributed(endings)),
+    "<div>A<br>\n  <u>B</u><br>\n  C<br>\n  D</div>",
+    "line endings retain style offsets and source lines",
+  );
+  equal(convert(rtfData(endings)), "<div>A<br>\n  <u>B</u><br>\n  C<br>\n  D</div>", "RTF line endings");
+
+  equal(
+    serialize(parseAttributed(attributedText("A\n\nB"))),
+    "<div>A<br>\n  <br>\n  B</div>",
+    "consecutive line breaks each begin a new indented source line",
+  );
 
   const unicode = attributedText("😀 e\u0301 👩‍💻 終");
 

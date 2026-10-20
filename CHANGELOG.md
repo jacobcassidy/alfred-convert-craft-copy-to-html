@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.5] - 2026-10-20
+
+### Changed
+
+- Put content after each `<br>` on a new source line and indent it at the containing block level, including consecutive breaks.
+
 ## [v0.2.4] - 2026-10-20
 
 ### Changed

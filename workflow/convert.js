@@ -228,7 +228,9 @@ function serialize(model) {
         text.push(renderRange(line.start, line.end));
       }
 
-      blocks.push(hasLists ? "<div>" + text.join("<br>") + "</div>" : text.join("<br>"));
+      const content = text.join("<br>\n" + "  ".repeat(1));
+
+      blocks.push(hasLists ? "<div>" + content + "</div>" : content);
     }
   }
 

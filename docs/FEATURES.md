@@ -14,7 +14,7 @@ The result is one HTML string, explicitly published as the only representation o
 | Bold, italic, underline, strike | `<strong>`, `<em>`, `<u>`, `<s>`, with deterministic combination order |
 | Monospace fonts                 | Bare `<code>` tags, including when combined with other styles          |
 | HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only    |
-| CRLF, CR, and LF line endings   | Normalized line breaks rendered as `<br>` with style offsets retained  |
+| CRLF, CR, and LF line endings   | Normalized `<br>` elements on separate indented source lines           |
 | Bullet markers and indentation  | Nested `<ul>`/`<li>`; monospace marker-prefixed lines remain code      |
 | Emoji and combining sequences   | Preserved graphemes, using the first character's style at a boundary   |
 
