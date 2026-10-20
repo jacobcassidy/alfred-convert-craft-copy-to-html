@@ -6,7 +6,7 @@ An Alfred workflow that copies the selected rich text from the native Craft app 
 
 1. Import [the workflow bundle](dist/convert-craft-copy-to-html.alfredworkflow) into Alfred. Alfred Powerpack is required.
 2. Select formatted text in Craft and press **Control-Command-C** (Ctrl+Cmd+C, ⌃⌘C).
-3. Release the keys and keep Craft active. “Conversion started.” is replaced by “HTML copy is ready to paste.” after the write succeeds, or by a specific failure message.
+3. Release the keys and keep Craft active. A “Conversion started.” notification appears, followed by a separate “HTML copy is ready to paste.” notification after the write succeeds, or a separate failure notification.
 4. Press Command-V wherever you need HTML source.
 
 For example, bold “Hello” followed by ordinary “world” becomes the clipboard string:
@@ -21,9 +21,9 @@ The shortcut is active only while Craft has focus. If Alfred clears the binding 
 
 ## Permissions and failures
 
-Allow Alfred under macOS **System Settings → Privacy & Security → Accessibility**, and allow control of **System Events** under **Automation** if prompted. Allow **Craft HTML Notifications** in **System Settings → Notifications** and its initial permission prompt. Enable banners and account for Focus settings to see status updates. Notifications do not take keyboard focus. Fast conversions may replace progress before you notice it; the ready message confirms completion.
+Allow Alfred under macOS **System Settings → Privacy & Security → Accessibility**, and allow control of **System Events** under **Automation** if prompted. Allow **Craft HTML Notifications** in **System Settings → Notifications** and its initial permission prompt. Enable banners and account for Focus settings to see status updates. Notifications do not take keyboard focus. Started and ready or failure are separate notifications, so completion can show a new banner.
 
-The action shows progress before waiting for the shortcut modifiers to be released. A bundled background notification app uses AppKit and the same notification identifier for progress and its terminal replacement. The helper provides the registered app identity that macOS requires for visible banners. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
+The action shows progress before waiting for the shortcut modifiers to be released. A bundled background notification app uses AppKit with separate notification identifiers for progress and the result. The helper provides the registered app identity that macOS requires for visible banners. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
 
 Every run makes a fresh Craft copy and requires RTF. Missing, unreadable, or empty rich text and conversion failures preserve the contents present after copying. Focus changes stop conversion, and a clipboard change during conversion preserves the newer contents. Modifier release times out after three seconds; a fresh copy must arrive within 2.5 seconds. Copying itself replaces the previous clipboard. The final clear/write operation is not atomic; a failed write can leave the clipboard empty and is reported as a failure.
 

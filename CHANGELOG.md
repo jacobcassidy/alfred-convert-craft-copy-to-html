@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.3] - 2026-10-20
+
+### Changed
+
+- Post separate started and ready or failure notifications, as requested, using distinct identities so completion can show a new macOS banner rather than silently updating the Notification Center entry.
+- Updated notification lifecycle tests and current documentation for the separate-banner flow.
+
 ## [v0.2.2] - 2026-10-20
 
 ### Fixed

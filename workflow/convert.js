@@ -353,7 +353,7 @@ function writeOutput(pasteboard, revision, item, operations, pid) {
  * Execute the only production flow with injectable side effects for tests.
  * @param {object} pasteboard Pasteboard to copy into and replace.
  * @param {object} operations Platform operations, including conversion and preparation.
- * @param {object} notifications Notification adapter with show and update operations.
+ * @param {object} notifications Notification adapter with show and finish operations.
  * @returns {string} Terminal status, also sent to the notification adapter after start.
  */
 function execute(pasteboard, operations, notifications) {
@@ -374,13 +374,13 @@ function execute(pasteboard, operations, notifications) {
     const item = operations.prepare(html);
 
     writeOutput(pasteboard, input.revision, item, operations, app.pid);
-    notifications.update(identity, READY);
+    notifications.finish(identity, READY);
 
     return READY;
   } catch (error) {
     const message = error.message || String(error);
 
-    if (started) notifications.update(identity, message);
+    if (started) notifications.finish(identity, message);
 
     return message;
   }
@@ -454,12 +454,30 @@ function runNotificationHelper(identity, message) {
 }
 
 /**
- * Route statuses through a registered app with a stable notification identity.
+ * Give progress and completion separate identities so each can show a banner.
  * @param {Function} deliver Background helper launcher, injectable for tests.
- * @returns {object} Explicit show/update adapter sharing the delivery backend.
+ * @returns {object} Adapter that posts a started banner and a separate result.
  */
 function nativeNotifications(deliver = runNotificationHelper) {
-  return { show: deliver, update: deliver };
+  return {
+    /**
+     * Post immediate progress for this conversion.
+     * @param {string} identity Conversion identifier.
+     * @param {string} message Progress text.
+     */
+    show(identity, message) {
+      deliver(identity + "-started", message);
+    },
+
+    /**
+     * Post a separate ready or failure notification after progress.
+     * @param {string} identity Conversion identifier.
+     * @param {string} message Terminal status text.
+     */
+    finish(identity, message) {
+      deliver(identity + "-finished", message);
+    },
+  };
 }
 
 /**

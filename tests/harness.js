@@ -284,30 +284,20 @@ function scenario(pasteboard, data, options) {
     },
   };
 
-  const notifications = {
-    /**
-     * Record progress without displaying a notification.
-     * @param {string} identity Notification identifier.
-     * @param {string} message Progress text.
-     */
-    show(identity, message) {
-      events.push("started");
-      notices.push([identity, message]);
-    },
+  /**
+   * Record the actual adapter's native delivery calls and clipboard state.
+   * @param {string} identity Stage-specific notification identifier.
+   * @param {string} message Status text.
+   */
+  function recordNotification(identity, message) {
+    events.push(message === STARTED ? "started" : "terminal");
+    notices.push([identity, message]);
 
-    /**
-     * Record the terminal update and clipboard state at that instant.
-     * @param {string} identity Notification identifier.
-     * @param {string} message Terminal text.
-     */
-    update(identity, message) {
-      events.push("terminal");
-      notices.push([identity, message]);
+    if (message === READY)
+      assert(clipboardText(pasteboard) === "<div>Hello</div>", "ready occurs only after output write");
+  }
 
-      if (message === READY)
-        assert(clipboardText(pasteboard) === "<div>Hello</div>", "ready occurs only after output write");
-    },
-  };
+  const notifications = nativeNotifications(recordNotification);
 
   return { operations, notifications, events, notices, state };
 }
@@ -436,10 +426,10 @@ function checkWorkflow() {
           equal(
             testCase.notices,
             [
-              ["craft-html-test-run", STARTED],
-              ["craft-html-test-run", result],
+              ["craft-html-test-run-started", STARTED],
+              ["craft-html-test-run-finished", result],
             ],
-            test.name + " replaces started with error",
+            test.name + " posts a separate failure after started",
           );
         }
 
@@ -474,10 +464,10 @@ function checkWorkflow() {
         equal(
           testCase.notices,
           [
-            ["craft-html-test-run", STARTED],
-            ["craft-html-test-run", READY],
+            ["craft-html-test-run-started", STARTED],
+            ["craft-html-test-run-finished", READY],
           ],
-          "shared notification identity",
+          "separate started and ready notification identities",
         );
         assert(testCase.events.indexOf("focus") < testCase.events.indexOf("started"), "validate before started");
         assert(
@@ -528,7 +518,7 @@ function isReady(notice) {
 }
 
 /**
- * Check background-app delivery and replacement identities without notifications.
+ * Check separate progress and result identities without real notifications.
  * @returns {number} Number of notification states checked.
  */
 function checkNotifications() {
@@ -537,7 +527,7 @@ function checkNotifications() {
 
   /**
    * Record messages sent to the background app without launching it.
-   * @param {string} identity Shared notification identity.
+   * @param {string} identity Stage-specific notification identity.
    * @param {string} message Status text.
    */
   function deliver(identity, message) {
@@ -547,19 +537,22 @@ function checkNotifications() {
 
   const notifications = nativeNotifications(deliver);
 
-  notifications.show("app-backend-test", STARTED);
-  notifications.update("app-backend-test", READY);
-  equal(delivered, { "app-backend-test": READY }, "terminal state replaces progress");
-  notifications.update("app-backend-test", "Copy failed.");
-  equal(delivered, { "app-backend-test": "Copy failed." }, "failure also replaces progress");
+  notifications.show("success", STARTED);
+  notifications.finish("success", READY);
+  equal(delivered, { "success-started": STARTED, "success-finished": READY }, "ready has a separate banner identity");
+  notifications.show("failure", STARTED);
+  notifications.finish("failure", "Copy failed.");
+  equal(delivered["failure-started"], STARTED, "failure leaves the started notification intact");
+  equal(delivered["failure-finished"], "Copy failed.", "failure gets its own banner identity");
   equal(
     calls,
     [
-      ["app-backend-test", STARTED],
-      ["app-backend-test", READY],
-      ["app-backend-test", "Copy failed."],
+      ["success-started", STARTED],
+      ["success-finished", READY],
+      ["failure-started", STARTED],
+      ["failure-finished", "Copy failed."],
     ],
-    "adapter passes identity to the helper unchanged",
+    "separate stage identities are stable and unique per run",
   );
 
   return calls.length;

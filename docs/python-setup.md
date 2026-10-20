@@ -30,7 +30,7 @@ The repository's `pyproject.toml` contains:
 ```toml
 [project]
 name = "convert-craft-copy-to-html"
-version = "0.2.2"
+version = "0.2.3"
 description = "Python development tools for the Convert Craft Copy to HTML Alfred workflow"
 requires-python = ">=3.11"
 dependencies = []

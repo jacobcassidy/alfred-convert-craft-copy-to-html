@@ -4,7 +4,7 @@
 
 Select formatted text in the native Craft app and press Control-Command-C. One nonconcurrent Alfred action checks Craft's bundle identity, shows “Conversion started.”, waits for modifier release, sends Command-C, and requires a fresh RTF copy. The same Craft process must remain frontmost before Copy, after Copy, and before writing output. The hotkey is restricted to Craft in Alfred's Related Apps configuration.
 
-The result is one HTML string, explicitly published as the only representation of one clipboard item: `public.utf8-plain-text`. Paste displays literal HTML tags in a text editor. Successful writing replaces the progress notification with “HTML copy is ready to paste.”; failures replace it with the reason. A bundled background app supplies a registered macOS notification source. A stable notification identifier provides replacement without stealing focus. Allow the app named Craft HTML Notifications when prompted.
+The result is one HTML string, explicitly published as the only representation of one clipboard item: `public.utf8-plain-text`. Paste displays literal HTML tags in a text editor. Successful writing posts a separate “HTML copy is ready to paste.” notification; failures post a separate notification with the reason. A bundled background app supplies a registered macOS notification source. Started and the result use distinct identifiers so both can appear as banners without taking focus. Allow the app named Craft HTML Notifications when prompted.
 
 ## Formatting
 
