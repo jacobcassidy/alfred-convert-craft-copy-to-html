@@ -18,8 +18,8 @@ r = json.loads(
     )
 )
 for expected in (
-    "<i>are</i>",
-    "<b>immutable</b>",
+    "<em>are</em>",
+    "<strong>immutable</strong>",
     "<s>unique</s>",
     "frozenset([1, 2, 4])</code>",
     "&lt; &amp; &gt;",

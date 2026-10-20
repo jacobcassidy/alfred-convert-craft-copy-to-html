@@ -104,9 +104,9 @@ function convert(data) {
 
     if (previous.code) text = '<code style="font-family:monospace;white-space:pre-wrap">' + text + "</code>";
 
-    if (previous.bold) text = "<b>" + text + "</b>";
+    if (previous.bold) text = "<strong>" + text + "</strong>";
 
-    if (previous.italic) text = "<i>" + text + "</i>";
+    if (previous.italic) text = "<em>" + text + "</em>";
 
     if (previous.underline) text = "<u>" + text + "</u>";
 

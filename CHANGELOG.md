@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed bold and italic HTML output to use `<strong>` and `<em>` instead of `<b>` and `<i>`.
 - Documented uv's default installation path, PATH verification, and how to avoid temporary installation directories.
 - Renamed the Python npm script aliases to use `py` and updated the documented commands.
 - Updated the README and Python setup guide to document the implemented development environment and commands.
