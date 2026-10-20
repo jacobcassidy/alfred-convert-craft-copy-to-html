@@ -205,7 +205,8 @@ function serialize(model) {
       titleStart,
       fontSize: model.styles[headingOffset]?.fontSize || 0,
       bold: !!model.styles[headingOffset]?.bold,
-      heading: hasContent && model.styles[headingOffset]?.bold ? model.styles[headingOffset]?.heading || 0 : 0,
+      heading:
+        hasContent && (isToggle || model.styles[headingOffset]?.bold) ? model.styles[headingOffset]?.heading || 0 : 0,
     });
     offset += line.length + 1;
   }
@@ -214,12 +215,12 @@ function serialize(model) {
     ...new Set(lines.filter((line) => line.heading && line.bold && !line.toggle).map((line) => line.fontSize)),
   ].sort((left, right) => right - left);
   const toggleIndents = [
-    ...new Set(lines.filter((line) => line.heading && line.bold && line.toggle).map((line) => line.toggleIndent)),
+    ...new Set(lines.filter((line) => line.heading && line.toggle).map((line) => line.toggleIndent)),
   ].sort((left, right) => left - right);
 
   if (toggleIndents.length >= 4) {
     for (const line of lines) {
-      if (line.heading && line.bold && line.toggle) {
+      if (line.heading && line.toggle) {
         line.heading = Math.min(toggleIndents.indexOf(line.toggleIndent) + 1, 4);
       }
     }

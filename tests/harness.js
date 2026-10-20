@@ -232,6 +232,32 @@ function checkConversion(root) {
     "a large heading style turns its Craft toggle into a heading",
   );
 
+  const regularToggle = attributedText("+ Regular toggle");
+
+  regularToggle.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica", 15),
+    $.NSMakeRange(2, regularToggle.length - 2),
+  );
+  equal(
+    serialize(parseAttributed(regularToggle)),
+    "<div>\n  <h4>Regular toggle</h4>\n</div>",
+    "regular 15-point toggle text becomes an h4",
+  );
+
+  const italicToggle = attributedText("+ Italic toggle");
+
+  italicToggle.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Oblique", 15),
+    $.NSMakeRange(2, italicToggle.length - 2),
+  );
+  equal(
+    serialize(parseAttributed(italicToggle)),
+    "<div>\n  <h4><i>Italic toggle</i></h4>\n</div>",
+    "italic 15-point toggle text becomes an h4 and keeps its inline style",
+  );
+
   const headings = attributedText("Title 1\nTitle 2\nTitle 3\nTitle 4\nBody");
 
   for (const [offset, size] of [

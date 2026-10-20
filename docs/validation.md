@@ -23,7 +23,7 @@ The builder uses Apple's Xcode Command Line Tools and local ad-hoc signing. The 
 
 ## Live acceptance
 
-After importing 0.2.17:
+After importing 0.2.18:
 
 1. Restore Control-Command-C if Alfred clears it. Keep Related Apps restricted to Craft and the modifier behavior set to “Pass through modifier keys (Fastest)”.
 2. Select nonprivate formatted content in Craft, trigger the shortcut, and release the keys. Confirm a started notification followed by a separate ready notification, with Craft remaining active. A failed run must post a separate failure notification.
