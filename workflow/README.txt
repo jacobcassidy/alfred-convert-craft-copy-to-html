@@ -6,8 +6,8 @@ Select formatted content in the native Craft app and press Control-Command-C (Ct
 If Alfred clears the shortcut or reports a conflict, assign a preferred combination in the Hotkey object. Keep Related Apps set to “only active when the following apps have focus” with Craft selected.
 
 STATUS AND PERMISSIONS
-“Conversion started.” appears as soon as Craft is validated, before waiting for the keys to be released. The same notification is replaced with “HTML copy is ready to paste.” after the clipboard write, or with a specific failure message. Notifications do not take focus. Repeated shortcuts during an active action do not start another conversion.
-Allow notifications for osascript in macOS System Settings > Notifications (and allow its initial notification prompt). Notification banners and Focus settings control visibility. The built-in osascript/AppKit backend uses NSUserNotification.identifier for replacement; no notification helper is installed.
+“Conversion started.” appears as soon as Craft is validated, before waiting for the keys to be released. The same notification is replaced with “HTML copy is ready to paste.” after the clipboard write, or with a specific failure message. Notifications do not take focus. Fast conversions may replace progress before you notice it; the ready message confirms completion. Repeated shortcuts during an active action do not start another conversion.
+Allow Craft HTML Notifications in macOS System Settings > Notifications and its initial permission prompt. Notification banners and Focus settings control visibility. A bundled background app supplies a registered notification source and uses NSUserNotification.identifier for replacement. It receives only status text and an identifier, never Craft contents or clipboard data. It cannot copy again when its notification is opened.
 Copy automation may require Alfred in System Settings > Privacy & Security > Accessibility, and permission to control System Events under Automation. An automation denial or copy timeout is reported instead of converting stale clipboard contents.
 
 OUTPUT
@@ -26,4 +26,4 @@ Missing, invalid, or empty RTF and conversion failures leave the fresh copy unch
 DEVELOPMENT
 Uses built-in macOS JXA and AppKit with no third-party runtime dependencies or network calls.
 From the repository root, run npm run test:py for fixture, isolated-pasteboard, simulated-copy, notification-ordering, wiring, and package checks. Automated tests never change the general clipboard, send keys, or display notifications.
-Run npm run build:workflow to build dist/convert-craft-copy-to-html.alfredworkflow.
+Run npm run build:workflow to build dist/convert-craft-copy-to-html.alfredworkflow. The builder uses the stock macOS osacompile and codesign tools to compile and locally sign the background notification app; no signing account or third-party runtime is required.

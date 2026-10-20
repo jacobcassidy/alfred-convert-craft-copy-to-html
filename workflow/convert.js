@@ -8,7 +8,6 @@
 ObjC.import("AppKit");
 
 const CRAFT_BUNDLE = "com.lukilabs.lukiapp";
-const TITLE = "Convert Craft Copy to HTML";
 const STARTED = "Conversion started.";
 const READY = "HTML copy is ready to paste.";
 const FOCUS_ERROR = "Focus changed. Select text in Craft and try again.";
@@ -431,26 +430,35 @@ function nativeOperations() {
 }
 
 /**
- * Use the built-in macOS notification center's replacement identifier.
- * @returns {object} Explicit show/update adapter sharing the delivery backend.
+ * Launch the bundled notification app in the background and await delivery.
+ * @param {string} identity Stable identifier for this conversion.
+ * @param {string} message Status text to display.
  */
-function nativeNotifications() {
-  const center = $.NSUserNotificationCenter.defaultUserNotificationCenter;
+function runNotificationHelper(identity, message) {
+  const path = ObjC.unwrap($.NSFileManager.defaultManager.currentDirectoryPath) + "/Craft HTML Notifications.app";
+  const task = $.NSTask.alloc.init;
+  const errors = $.NSPipe.pipe;
 
-  /**
-   * Deliver or replace a notification without taking keyboard focus.
-   * @param {string} identity Stable identity for the current conversion.
-   * @param {string} message Started, ready, or failure text.
-   */
-  function deliver(identity, message) {
-    const notification = $.NSUserNotification.alloc.init;
-
-    notification.identifier = identity;
-    notification.title = TITLE;
-    notification.informativeText = message;
-    center.deliverNotification(notification);
+  if (!$.NSFileManager.defaultManager.fileExistsAtPath(path)) {
+    throw new Error("Notification helper missing. Reinstall the latest workflow bundle.");
   }
 
+  task.launchPath = "/usr/bin/open";
+  task.arguments = $(["-g", "-j", "-n", "-W", path, "--args", identity, message]);
+  task.standardError = errors;
+  task.launch;
+  task.waitUntilExit;
+
+  if (Number(task.terminationStatus) !== 0)
+    throw new Error("Could not launch Craft HTML Notifications. Reinstall the workflow bundle and try again.");
+}
+
+/**
+ * Route statuses through a registered app with a stable notification identity.
+ * @param {Function} deliver Background helper launcher, injectable for tests.
+ * @returns {object} Explicit show/update adapter sharing the delivery backend.
+ */
+function nativeNotifications(deliver = runNotificationHelper) {
   return { show: deliver, update: deliver };
 }
 

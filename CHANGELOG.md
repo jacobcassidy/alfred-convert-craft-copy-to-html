@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.1] - 2026-10-20
+
+### Fixed
+
+- Fixed missing macOS status banners: direct AppKit notifications from osascript could be recorded as delivered while macOS could not resolve their source. Status updates now run through a bundled background app named Craft HTML Notifications, preserving replacement by notification identity without taking focus.
+- Added notification-adapter and helper coverage, packaged-app identity/signature/executable checks, and instructions for the helper's notification permission.
+
 ## [v0.2.0] - 2026-10-20
 
 ### Added

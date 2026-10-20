@@ -11,9 +11,10 @@ project = Path(__file__).resolve().parent.parent
 workflow = project / "workflow"
 source = (workflow / "convert.js").read_text()
 harness = (project / "tests" / "harness.js").read_text()
+notifications = (workflow / "notify.js").read_text()
 
 with tempfile.NamedTemporaryFile(mode="w", suffix=".js") as script:
-    script.write(source + "\n" + harness)
+    script.write(source + "\n" + notifications + "\n" + harness)
     script.flush()
     result = json.loads(
         subprocess.check_output(
@@ -42,7 +43,7 @@ assert len(info["connections"]["copy-hotkey"]) == 1
 assert info["connections"]["copy-hotkey"][0]["destinationuid"] == "convert"
 assert set(info["uidata"]) == set(objects)
 assert info["bundleid"] == "local.jacob.craft-to-anki"
-assert info["version"] == "0.2.0"
+assert info["version"] == "0.2.1"
 assert info["readme"] == (workflow / "README.txt").read_text()
 assert "--copy" not in source
 assert "NSPasteboardTypeHTML" not in source
@@ -60,8 +61,30 @@ with tempfile.TemporaryDirectory() as temp:
     subprocess.run(["python3", str(builder)], check=True)
     bundle = sandbox / "dist" / "convert-craft-copy-to-html.alfredworkflow"
     with zipfile.ZipFile(bundle) as archive:
-        names = {"info.plist", "convert.js", "README.txt", "icon.png"}
-        assert set(archive.namelist()) == names
+        names = {"info.plist", "convert.js", "notify.js", "README.txt", "icon.png"}
+        packaged = set(archive.namelist())
+        helper = "Craft HTML Notifications.app/"
+        assert {name for name in packaged if not name.startswith(helper)} == names
+        assert all(not name.startswith("docs/") for name in packaged)
+        helper_info = plistlib.loads(archive.read(helper + "Contents/Info.plist"))
+        assert (
+            helper_info["CFBundleIdentifier"] == "local.jacob.craft-html-notifications"
+        )
+        assert helper_info["LSUIElement"] is True
+        assert helper_info["CFBundleVersion"] == info["version"]
+        executable = archive.getinfo(helper + "Contents/MacOS/applet")
+        assert executable.external_attr >> 16 & 0o111
+        archive.extractall(sandbox / "unpacked")
+        helper_path = sandbox / "unpacked" / helper
+        subprocess.run(["/usr/bin/codesign", "--verify", str(helper_path)], check=True)
+        compiled_source = subprocess.check_output(
+            [
+                "/usr/bin/osadecompile",
+                str(helper_path / "Contents/Resources/Scripts/main.scpt"),
+            ],
+            text=True,
+        )
+        assert compiled_source.strip() == notifications.strip()
         for name in names:
             assert archive.read(name) == (workflow / name).read_bytes()
 print("Replacement package contents checked without modifying dist/.")

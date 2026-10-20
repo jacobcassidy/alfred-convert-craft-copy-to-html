@@ -21,9 +21,9 @@ The shortcut is active only while Craft has focus. If Alfred clears the binding 
 
 ## Permissions and failures
 
-Allow Alfred under macOS **System Settings → Privacy & Security → Accessibility**, and allow control of **System Events** under **Automation** if prompted. Allow **osascript** notifications in **System Settings → Notifications** and its initial permission prompt. Enable banners and account for Focus settings to see status updates. Notifications do not take keyboard focus.
+Allow Alfred under macOS **System Settings → Privacy & Security → Accessibility**, and allow control of **System Events** under **Automation** if prompted. Allow **Craft HTML Notifications** in **System Settings → Notifications** and its initial permission prompt. Enable banners and account for Focus settings to see status updates. Notifications do not take keyboard focus. Fast conversions may replace progress before you notice it; the ready message confirms completion.
 
-The action shows progress before waiting for the shortcut modifiers to be released. It uses the built-in AppKit notification center and the same notification identifier for progress and its terminal replacement. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
+The action shows progress before waiting for the shortcut modifiers to be released. A bundled background notification app uses AppKit and the same notification identifier for progress and its terminal replacement. The helper provides the registered app identity that macOS requires for visible banners. The action is nonconcurrent, so repeated shortcuts during a run do not start competing conversions.
 
 Every run makes a fresh Craft copy and requires RTF. Missing, unreadable, or empty rich text and conversion failures preserve the contents present after copying. Focus changes stop conversion, and a clipboard change during conversion preserves the newer contents. Modifier release times out after three seconds; a fresh copy must arrive within 2.5 seconds. Copying itself replaces the previous clipboard. The final clear/write operation is not atomic; a failed write can leave the clipboard empty and is reported as a failure.
 
@@ -56,7 +56,7 @@ uv manages Python 3.11 or later and installs Ruff in `.venv/` using `uv.lock`. K
 
 Tests require macOS and access to its pasteboard service. They use named pasteboards, RTF fixtures, simulated copy operations, and recording notifications; they never modify the general clipboard, send real keystrokes, or display notifications. They also check Alfred wiring and build an isolated package for inspection.
 
-The build reads `workflow/info.plist` and packages only the runtime, metadata, readme, and icon at the archive root in `dist/convert-craft-copy-to-html.alfredworkflow`. The pre-commit hook applies JavaScript, Markdown, Prettier, and Ruff checks to staged files. See [Python development setup](docs/python-setup.md).
+The build reads `workflow/info.plist`, compiles `workflow/notify.js` into a background app with the stock macOS `osacompile` tool, and applies a local ad-hoc signature with `codesign`. It packages the converter, notification source and app, metadata, readme, and icon in `dist/convert-craft-copy-to-html.alfredworkflow`. The pre-commit hook applies JavaScript, Markdown, Prettier, and Ruff checks to staged files. See [Python development setup](docs/python-setup.md).
 
 ## Project layout
 

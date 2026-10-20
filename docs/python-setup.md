@@ -30,7 +30,7 @@ The repository's `pyproject.toml` contains:
 ```toml
 [project]
 name = "convert-craft-copy-to-html"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python development tools for the Convert Craft Copy to HTML Alfred workflow"
 requires-python = ">=3.11"
 dependencies = []
@@ -112,7 +112,7 @@ The existing npm scripts, including `check`, `format`, and `test`, remain availa
 
 The VS Code workspace disables automatic terminal activation. It sets `python.useEnvironmentsExtension` to `false` to use the original Python extension's environment management, then sets `python.terminal.activateEnvironment` and `python.terminal.activateEnvInCurrentTerminal` to `false`. The newer Python Environments extension's `python-envs.terminal.autoActivationType` setting only supports User scope, so it cannot disable activation for this workspace alone. After changing these settings, run **Developer: Reload Window** and create a fresh terminal. The npm aliases continue to use the uv environment. See [Python environment settings and scope](https://code.visualstudio.com/docs/python/environments#settings-scope-reference).
 
-The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `workflow/info.plist`.
+The conversion checks require macOS because they invoke `/usr/bin/osascript` and AppKit. Packaging also uses the stock macOS `/usr/bin/osacompile` and `/usr/bin/codesign` tools to build and locally sign the background notification app; no signing account is required. The build command creates `dist/convert-craft-copy-to-html.alfredworkflow` using the version in `workflow/info.plist`.
 
 ## 5. Git hooks
 

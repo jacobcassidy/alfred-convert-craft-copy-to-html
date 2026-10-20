@@ -3,7 +3,7 @@
  * @file Exercise native RTF and isolated pasteboards with simulated automation.
  */
 
-/* global CRAFT_BUNDLE, STARTED, READY, convert, parseAttributed, prepareOutput, execute, serialize */
+/* global CRAFT_BUNDLE, STARTED, READY, convert, parseAttributed, prepareOutput, execute, serialize, nativeNotifications, showStatus */
 /* exported run */
 
 /**
@@ -528,10 +528,66 @@ function isReady(notice) {
 }
 
 /**
+ * Check app-based delivery and replacement identities without real notifications.
+ * @returns {number} Number of notification states checked.
+ */
+function checkNotifications() {
+  const delivered = {};
+  const calls = [];
+
+  const center = {
+    /**
+     * Record a native notification in place of macOS's notification center.
+     * @param {object} notification Prepared NSUserNotification.
+     */
+    deliverNotification(notification) {
+      const identity = ObjC.unwrap(notification.identifier);
+      const message = ObjC.unwrap(notification.informativeText);
+
+      equal(ObjC.unwrap(notification.title), "Convert Craft Copy to HTML", "notification title");
+      delivered[identity] = message;
+      calls.push([identity, message]);
+    },
+  };
+
+  /**
+   * Exercise the actual helper delivery function without launching an app.
+   * @param {string} identity Shared notification identity.
+   * @param {string} message Status text.
+   */
+  function deliver(identity, message) {
+    showStatus(identity, message, center);
+  }
+
+  const notifications = nativeNotifications(deliver);
+
+  notifications.show("app-backend-test", STARTED);
+  notifications.update("app-backend-test", READY);
+  equal(delivered, { "app-backend-test": READY }, "terminal state replaces progress");
+  notifications.update("app-backend-test", "Copy failed.");
+  equal(delivered, { "app-backend-test": "Copy failed." }, "failure also replaces progress");
+  equal(
+    calls,
+    [
+      ["app-backend-test", STARTED],
+      ["app-backend-test", READY],
+      ["app-backend-test", "Copy failed."],
+    ],
+    "adapter passes identity to the helper unchanged",
+  );
+
+  return calls.length;
+}
+
+/**
  * Execute tests; production entry point is replaced only in this harness.
  * @param {string[]} argv Repository root supplied by the Python test runner.
  * @returns {string} Test summary as JSON.
  */
 function run(argv) {
-  return JSON.stringify({ conversionGroups: checkConversion(argv[0]), workflowScenarios: checkWorkflow() });
+  return JSON.stringify({
+    conversionGroups: checkConversion(argv[0]),
+    workflowScenarios: checkWorkflow(),
+    notificationStates: checkNotifications(),
+  });
 }

@@ -1,6 +1,6 @@
 # Refactor plan: Craft copy to plain-text HTML
 
-Status: implemented in workflow version 0.2.0, with automated checks passing. See [validation evidence and remaining live checks](validation.md) for acceptance status. The previous workflow is archived in [reference/v0.1.0/](reference/v0.1.0/) alongside its build script and tests. The specification below records the replacement contract and original implementation plan.
+Status: implemented in workflow version 0.2.1, with automated checks passing. See [validation evidence and remaining live checks](validation.md) for acceptance status. The previous workflow is archived in [reference/v0.1.0/](reference/v0.1.0/) alongside its build script and tests. The specification below records the replacement contract and original implementation plan.
 
 ## Goal and output contract
 
@@ -66,7 +66,7 @@ Heading inference, numbered lists, task states, images, attachments, tables, syn
 
 ## Implementation design
 
-Use the built-in macOS JXA and AppKit runtime, with no new runtime dependencies. Create a fresh implementation in `workflow/convert.js` rather than adding another output mode to the existing converter.
+Use the built-in macOS JXA and AppKit runtime, with no third-party runtime dependencies. The bundled background notification app is built from `workflow/notify.js` with the stock macOS `osacompile` and `codesign` tools so macOS can resolve its notification source. Create a fresh implementation in `workflow/convert.js` rather than adding another output mode to the existing converter.
 
 Keep responsibilities small and explicit:
 
