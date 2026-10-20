@@ -31,6 +31,7 @@
   "scripts": {
     "check": "npx prettier . --check",
     "format": "npx prettier . --write",
+    "hook:install": "npx lefthook install",
     "lint:docs": "npx markdownlint-cli2 \"**/*.md\"",
     "lint:docs:fix": "npx markdownlint-cli2 \"**/*.md\" --fix",
     "lint:scripts": "eslint . --max-warnings 0",
