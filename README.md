@@ -34,6 +34,10 @@ The pre-commit hook runs Ruff lint fixes followed by formatting on staged Python
 
 See [Python development setup](docs/python-setup.md) for installation, dependency updates, configuration, and verification commands.
 
+## Refactor documentation
+
+The [previous feature inventory](docs/previous-features.md) documents the current workflow and its implementation. The [refactor plan](docs/refactor-plan.md) proposes a replacement that copies HTML source as the clipboard's only plain-text representation. These documents describe planned work; the current workflow behavior is unchanged.
+
 ## Project layout
 
 - `workflow/` contains the Alfred workflow source files.
