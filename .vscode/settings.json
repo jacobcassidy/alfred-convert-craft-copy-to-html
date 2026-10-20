@@ -16,9 +16,6 @@
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
   "prettier.configPath": "prettier.config.js",
-  "python.terminal.activateEnvInCurrentTerminal": false,
-  "python.terminal.activateEnvironment": false,
-  "python.useEnvironmentsExtension": false,
   "search.exclude": {
     "**.min.js": true,
     "**/dist/**": true
