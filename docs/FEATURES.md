@@ -8,16 +8,16 @@ The result is one HTML string, explicitly published as the only representation o
 
 ## Formatting
 
-| Craft content                   | HTML source                                                              |
-| ------------------------------- | ------------------------------------------------------------------------ |
-| Ordinary text                   | Escaped text inside an outer `<div>`                                     |
-| Bold, italic, underline, strike | `<strong>`, `<em>`, `<u>`, `<s>`, with deterministic combination order   |
-| Monospace fonts                 | Bare `<code>` tags, including when combined with other styles            |
-| HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only      |
-| CRLF, CR, and LF line endings   | Normalized `<br>` elements on separate indented source lines             |
-| Bullet markers and indentation  | Nested `<ul>`/`<li>`; monospace marker-prefixed lines remain code        |
-| Craft toggle markers            | Keep `+` and its text while removing whitespace copied before the marker |
-| Emoji and combining sequences   | Preserved graphemes, using the first character's style at a boundary     |
+| Craft content                   | HTML source                                                                                    |
+| ------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Ordinary text                   | Escaped text inside an outer `<div>`                                                           |
+| Bold, italic, underline, strike | `<strong>`, `<em>`, `<u>`, `<s>`, with deterministic combination order                         |
+| Monospace fonts                 | Bare `<code>` tags, including when combined with other styles                                  |
+| HTTP, HTTPS, and mail links     | Escaped `<a href="…">`; other destinations retain visible text only                            |
+| CRLF, CR, and LF line endings   | Normalized `<br>` elements on separate indented source lines                                   |
+| Bullet markers and indentation  | Nested `<ul>`/`<li>`; monospace marker-prefixed lines remain code                              |
+| Craft toggle markers            | Keep `+` and its text without leading indentation; heading-sized toggle text becomes a heading |
+| Emoji and combining sequences   | Preserved graphemes, using the first character's style at a boundary                           |
 
 Supported bullet prefixes are `-`, `•`, `◦`, `▪`, and `‣`, followed by spaces, tabs, or nonbreaking spaces. Tabs count as four spaces for list indentation. Nested block elements use new lines and two spaces of source indentation per level; empty generated blocks are omitted, and inline markup stays with its text. Code whitespace remains in the HTML source; visual whitespace behavior is controlled by the receiving application's rendering rules.
 

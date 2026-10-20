@@ -33,6 +33,7 @@ function styleAt(attributed, offset) {
   const font = attrs.objectForKey($.NSFontAttributeName);
   const traits = font.isNil() ? 0 : Number($.NSFontManager.sharedFontManager.traitsOfFont(font));
   const name = font.isNil() ? "" : ObjC.unwrap(font.fontName);
+  const size = font.isNil() ? 0 : Number(font.pointSize);
   const link = attrs.objectForKey($.NSLinkAttributeName);
 
   /**
@@ -52,6 +53,7 @@ function styleAt(attributed, offset) {
     underline: enabled($.NSUnderlineStyleAttributeName),
     strike: enabled($.NSStrikethroughStyleAttributeName),
     code: !!(traits & 1024) || /mono|menlo|courier|consolas/i.test(name),
+    heading: size >= 28 ? 1 : size >= 22 ? 2 : size >= 18 ? 3 : size >= 15 ? 4 : 0,
     link: link.isNil() ? "" : ObjC.unwrap(link.description),
   };
 }
@@ -167,13 +169,18 @@ function serialize(model) {
 
     if (marker && model.styles[offset + marker[1].length].code) marker = null;
 
-    const start = toggle && !model.styles[offset + toggle[1].length].code ? offset + toggle[1].length : offset;
+    const isToggle = !!toggle && !model.styles[offset + toggle[1].length].code;
+    const start = isToggle ? offset + toggle[1].length : offset;
+    const titleStart = isToggle ? offset + toggle[0].length : start;
 
     lines.push({
       start: marker ? offset + marker[0].length : start,
       end: offset + line.length,
       bullet: !!marker,
       indent: marker ? marker[1].replace(/\t/g, "    ").length : 0,
+      toggle: isToggle,
+      titleStart,
+      heading: model.styles[titleStart]?.heading || 0,
     });
     offset += line.length + 1;
   }
@@ -229,9 +236,19 @@ function serialize(model) {
 
       if (list) blocks.push(list);
     } else {
+      if (lines[cursor].toggle && lines[cursor].heading) {
+        const line = lines[cursor++];
+
+        const title = renderRange(line.titleStart, line.end).replace(/<\/?strong>/g, "");
+
+        blocks.push("<h" + line.heading + ">" + title + "</h" + line.heading + ">");
+
+        continue;
+      }
+
       const text = [];
 
-      while (cursor < lines.length && !lines[cursor].bullet) {
+      while (cursor < lines.length && !lines[cursor].bullet && !(lines[cursor].toggle && lines[cursor].heading)) {
         const line = lines[cursor++];
 
         text.push(renderRange(line.start, line.end));

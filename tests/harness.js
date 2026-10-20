@@ -196,6 +196,19 @@ function checkConversion(root) {
     "Craft toggle plus markers have no preceding source whitespace",
   );
 
+  const styledToggle = attributedText("  + Styled toggle");
+
+  styledToggle.addAttributeValueRange(
+    $.NSFontAttributeName,
+    $.NSFont.fontWithNameSize("Helvetica-Bold", 28),
+    $.NSMakeRange(4, styledToggle.length - 4),
+  );
+  equal(
+    serialize(parseAttributed(styledToggle)),
+    "<div><h1>Styled toggle</h1></div>",
+    "a large heading style turns its Craft toggle into a heading",
+  );
+
   return 10;
 }
 
