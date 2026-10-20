@@ -1,4 +1,4 @@
-Convert Craft Copy to HTML 1.4.0
+Convert Craft Copy to HTML
 
 INSTALL
 Open convert-craft-copy-to-html.alfredworkflow and import/update it in Alfred (Powerpack required).

@@ -182,7 +182,7 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Convert Craft Copy to HTML 1.4.0
+	<string>Convert Craft Copy to HTML
 
 INSTALL
 Open convert-craft-copy-to-html.alfredworkflow and import/update it in Alfred (Powerpack required).
@@ -245,6 +245,6 @@ Run python3 build.py to rebuild the importable workflow.
 		</dict>
 	</dict>
 	<key>version</key>
-	<string>1.4.0</string>
+	<string>0.1.0</string>
 </dict>
 </plist>
