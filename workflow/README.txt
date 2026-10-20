@@ -26,4 +26,4 @@ Missing, invalid, or empty RTF and conversion failures leave the fresh copy unch
 DEVELOPMENT
 Uses built-in macOS JXA and AppKit with no third-party runtime dependencies or network calls.
 From the repository root, run npm run test:py for fixture, isolated-pasteboard, simulated-copy, notification-ordering, wiring, and package checks. Automated tests never change the general clipboard, send keys, or display notifications.
-Run npm run build:workflow to build dist/convert-craft-copy-to-html.alfredworkflow. The builder uses the stock macOS osacompile and codesign tools to compile and locally sign the background notification app; no signing account or third-party runtime is required.
+Run npm run build:workflow to build dist/convert-craft-copy-to-html.alfredworkflow. Building from source requires Apple’s Xcode Command Line Tools. The builder uses xcrun clang and codesign to compile and locally sign the native background notification app for Apple silicon and Intel; no signing account or third-party runtime is required. The prebuilt bundle needs no developer tools. The native host has no script-app startup dialog while Control is held.

@@ -3,7 +3,7 @@
  * @file Exercise native RTF and isolated pasteboards with simulated automation.
  */
 
-/* global CRAFT_BUNDLE, STARTED, READY, convert, parseAttributed, prepareOutput, execute, serialize, nativeNotifications, showStatus */
+/* global CRAFT_BUNDLE, STARTED, READY, convert, parseAttributed, prepareOutput, execute, serialize, nativeNotifications */
 /* exported run */
 
 /**
@@ -528,35 +528,21 @@ function isReady(notice) {
 }
 
 /**
- * Check app-based delivery and replacement identities without real notifications.
+ * Check background-app delivery and replacement identities without notifications.
  * @returns {number} Number of notification states checked.
  */
 function checkNotifications() {
   const delivered = {};
   const calls = [];
 
-  const center = {
-    /**
-     * Record a native notification in place of macOS's notification center.
-     * @param {object} notification Prepared NSUserNotification.
-     */
-    deliverNotification(notification) {
-      const identity = ObjC.unwrap(notification.identifier);
-      const message = ObjC.unwrap(notification.informativeText);
-
-      equal(ObjC.unwrap(notification.title), "Convert Craft Copy to HTML", "notification title");
-      delivered[identity] = message;
-      calls.push([identity, message]);
-    },
-  };
-
   /**
-   * Exercise the actual helper delivery function without launching an app.
+   * Record messages sent to the background app without launching it.
    * @param {string} identity Shared notification identity.
    * @param {string} message Status text.
    */
   function deliver(identity, message) {
-    showStatus(identity, message, center);
+    delivered[identity] = message;
+    calls.push([identity, message]);
   }
 
   const notifications = nativeNotifications(deliver);

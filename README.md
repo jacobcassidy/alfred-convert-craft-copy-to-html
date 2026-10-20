@@ -31,7 +31,7 @@ See [current features and limits](docs/FEATURES.md), [validation evidence](docs/
 
 ## Build and development
 
-Install Node.js/npm and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from the repository root:
+For building from source, install Apple’s Xcode Command Line Tools (`xcode-select --install`), Node.js/npm, and [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from the repository root:
 
 ```sh
 npm ci
@@ -56,7 +56,7 @@ uv manages Python 3.11 or later and installs Ruff in `.venv/` using `uv.lock`. K
 
 Tests require macOS and access to its pasteboard service. They use named pasteboards, RTF fixtures, simulated copy operations, and recording notifications; they never modify the general clipboard, send real keystrokes, or display notifications. They also check Alfred wiring and build an isolated package for inspection.
 
-The build reads `workflow/info.plist`, compiles `workflow/notify.js` into a background app with the stock macOS `osacompile` tool, and applies a local ad-hoc signature with `codesign`. It packages the converter, notification source and app, metadata, readme, and icon in `dist/convert-craft-copy-to-html.alfredworkflow`. The pre-commit hook applies JavaScript, Markdown, Prettier, and Ruff checks to staged files. See [Python development setup](docs/python-setup.md).
+The build reads `workflow/info.plist`, compiles `workflow/notify.m` into a native background app for Apple silicon and Intel using `xcrun clang`, and applies a local ad-hoc signature with `codesign`. The native host has no script-app startup dialog, including while Control is held. Installing the prebuilt bundle does not require developer tools. It packages the converter, notification host source and app, metadata, readme, and icon in `dist/convert-craft-copy-to-html.alfredworkflow`. The pre-commit hook applies JavaScript, Markdown, Prettier, and Ruff checks to staged files. See [Python development setup](docs/python-setup.md).
 
 ## Project layout
 

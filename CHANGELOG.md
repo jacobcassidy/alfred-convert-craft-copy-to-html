@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [v0.2.2] - 2026-10-20
+
+### Fixed
+
+- Replaced the notification script applet with a native Cocoa host to eliminate its Control-triggered “Press Run to run this script or Quit to quit” startup dialog while showing immediate shortcut progress.
+- Added package checks for the native universal executable, absence of script-applet resources, and a no-arguments launch that exits without UI or notification delivery. Building from source now requires Apple’s Xcode Command Line Tools; the prebuilt workflow has no additional runtime requirements.
+
 ## [v0.2.1] - 2026-10-20
 
 ### Fixed
